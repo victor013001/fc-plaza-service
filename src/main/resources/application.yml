@@ -1,5 +1,5 @@
 spring:
   application:
-    name: Non Reactive Archetype
+    name: FC Plaza Service
   profiles:
     active: ${ACTIVE_PROFILE:none}

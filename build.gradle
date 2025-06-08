@@ -40,7 +40,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:${openApiVersion}'
+    implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:${openApiVersion}"
 
     //DATABASE
     implementation 'org.flywaydb:flyway-core'
@@ -48,15 +48,20 @@ dependencies {
     runtimeOnly 'com.mysql:mysql-connector-j'
 
     //EXTERNAL
-    implementation 'org.mapstruct:mapstruct:${mapstructVersion}'
-    annotationProcessor 'org.mapstruct:mapstruct-processor:${mapstructVersion}'
-    annotationProcessor 'org.projectlombok:lombok:${lombokVersion}'
-    annotationProcessor 'org.projectlombok:lombok-mapstruct-binding:${lombokMapstructBindingVersion}'
-    compileOnly 'org.projectlombok:lombok:${lombokVersion}'
+    implementation "org.mapstruct:mapstruct:${mapstructVersion}"
+    annotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"
+    annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
+    annotationProcessor "org.projectlombok:lombok-mapstruct-binding:${lombokMapstructBindingVersion}"
+    compileOnly "org.projectlombok:lombok:${lombokVersion}"
 
     //TESTING
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+    //TEST CONTAINERS
+    testImplementation 'org.springframework.boot:spring-boot-testcontainers'
+    testImplementation 'org.testcontainers:junit-jupiter'
+    testImplementation 'org.testcontainers:mysql'
 }
 
 tasks.named('test') {
@@ -73,6 +78,7 @@ def jacocoExcludes = [
         '**/config/**',
         '**/enums/**',
         '**/util/**',
+        '**/mapper/**',
 ]
 
 def mainClassDirsProvider = layout.buildDirectory.dir("classes/java/main").map { dir ->

@@ -15,4 +15,5 @@ public class MsgConst {
   public static final String DISH_CREATED_SUCCESSFULLY_MSG = "The dish was created successfully.";
   public static final String DISH_ALREADY_EXISTS_MSG =
       "The dish could not be created due to a data conflict.";
+  public static final String DISH_UPDATED_SUCCESSFULLY_MSG = "The dish was updated successfully.";
 }

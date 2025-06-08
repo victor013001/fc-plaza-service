@@ -20,6 +20,19 @@ public class DishUseCase implements DishServicePort {
     dishPersistencePort.saveDish(dish);
   }
 
+  @Override
+  public void updateDish(Dish dish, Long dishId) {
+    validRestaurantId(dish.restaurantId());
+    validDishId(dishId, dish.restaurantId());
+    dishPersistencePort.updateDish(dish, dishId);
+  }
+
+  private void validDishId(Long dishId, Long restaurantId) {
+    if (!dishPersistencePort.existsById(dishId, restaurantId)) {
+      throw new BadRequest();
+    }
+  }
+
   private void validRestaurantId(Long restaurantId) {
     if (!restaurantPersistencePort.existsById(restaurantId)) {
       throw new BadRequest();

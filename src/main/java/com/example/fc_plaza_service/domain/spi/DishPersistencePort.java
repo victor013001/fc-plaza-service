@@ -6,4 +6,8 @@ public interface DishPersistencePort {
   void saveDish(Dish dish);
 
   boolean existsByName(String name, Long restaurantId);
+
+  boolean existsById(Long dishId, Long restaurantId);
+
+  void updateDish(Dish dish, Long dishId);
 }

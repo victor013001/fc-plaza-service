@@ -5,4 +5,5 @@ import lombok.experimental.UtilityClass;
 @UtilityClass
 public class SwaggerConst {
   public static final String CREATE_RESTAURANT_OPERATION = "Create new restaurant";
+  public static final String CREATE_DISH_OPERATION = "Create new dish";
 }

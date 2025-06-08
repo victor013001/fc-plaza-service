@@ -19,7 +19,7 @@ public class RestaurantPersistenceAdapter implements RestaurantPersistencePort {
   @Override
   @Transactional
   public void saveRestaurant(Restaurant restaurant) {
-    log.info("{} Saving user with nit: {}.", LOG_PREFIX, restaurant.nit());
+    log.info("{} Saving restaurant with nit: {}.", LOG_PREFIX, restaurant.nit());
     restaurantRepository.save(restaurantEntityMapper.toEntity(restaurant));
   }
 
@@ -35,5 +35,11 @@ public class RestaurantPersistenceAdapter implements RestaurantPersistencePort {
   public boolean existsByPhone(String phone) {
     log.info("{} Checking if phone: {} exists.", LOG_PREFIX, phone);
     return restaurantRepository.existsByPhone(phone);
+  }
+
+  @Override
+  public boolean existsById(Long restaurantId) {
+    log.info("{} Checking if restaurant with id: {} exists.", LOG_PREFIX, restaurantId);
+    return restaurantRepository.existsById(restaurantId);
   }
 }

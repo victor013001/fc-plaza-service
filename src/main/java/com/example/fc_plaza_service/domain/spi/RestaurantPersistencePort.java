@@ -8,4 +8,6 @@ public interface RestaurantPersistencePort {
   boolean existsByNIT(String nit);
 
   boolean existsByPhone(String phone);
+
+  boolean existsById(Long restaurantId);
 }

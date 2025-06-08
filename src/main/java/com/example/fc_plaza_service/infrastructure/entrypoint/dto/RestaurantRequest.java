@@ -8,5 +8,5 @@ public record RestaurantRequest(
     @NotBlank(message = "NIT is mandatory") String nit,
     @NotBlank(message = "Address is mandatory") String address,
     @NotBlank(message = "Phone is mandatory") String phone,
-    String urlLogo,
+    @NotBlank(message = "Url logo is mandatory") String logoUrl,
     @NotNull(message = "User id is mandatory") Long userId) {}

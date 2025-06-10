@@ -42,4 +42,9 @@ public class RestaurantPersistenceAdapter implements RestaurantPersistencePort {
     log.info("{} Checking if restaurant with id: {} exists.", LOG_PREFIX, restaurantId);
     return restaurantRepository.existsById(restaurantId);
   }
+
+  @Override
+  public Long getLandlordId(Long restaurantId) {
+    return restaurantRepository.findUserIdByRestaurantId(restaurantId);
+  }
 }

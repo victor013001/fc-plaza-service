@@ -34,6 +34,7 @@ ext {
     lombokMapstructBindingVersion = "0.2.0"
     openApiVersion = "2.5.0"
     springCloudVersion = "2023.0.4"
+    jjwtVersion = "0.11.5"
 }
 
 dependencies {
@@ -43,6 +44,12 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:${openApiVersion}"
     implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+
+    //SECURITY
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation "io.jsonwebtoken:jjwt-api:${jjwtVersion}"
+    runtimeOnly "io.jsonwebtoken:jjwt-impl:${jjwtVersion}"
+    runtimeOnly "io.jsonwebtoken:jjwt-jackson:${jjwtVersion}"
 
     //DATABASE
     implementation 'org.flywaydb:flyway-core'
@@ -87,6 +94,7 @@ def jacocoExcludes = [
         '**/enums/**',
         '**/util/**',
         '**/mapper/**',
+        '**/security/**',
 ]
 
 def mainClassDirsProvider = layout.buildDirectory.dir("classes/java/main").map { dir ->

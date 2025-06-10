@@ -1,0 +1,118 @@
+package com.example.fc_plaza_service.infrastructure.entrypoint.controller;
+
+import static com.example.fc_plaza_service.domain.constants.RouterConst.DISH_BASE_PATH;
+import static com.example.fc_plaza_service.domain.constants.RouterConst.RESTAURANT_BASE_PATH;
+import static com.example.fc_plaza_service.domain.enums.ServerResponses.DISH_CREATED_SUCCESSFULLY;
+import static com.example.fc_plaza_service.domain.enums.ServerResponses.DISH_UPDATED_SUCCESSFULLY;
+import static com.example.fc_plaza_service.util.data.DishRequestData.getInvalidDishRequest;
+import static com.example.fc_plaza_service.util.data.DishRequestData.getInvalidDishUpdateRequest;
+import static com.example.fc_plaza_service.util.data.DishRequestData.getValidDishRequest;
+import static com.example.fc_plaza_service.util.data.DishRequestData.getValidDishUpdateRequest;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doNothing;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import com.example.fc_plaza_service.application.service.DishApplicationService;
+import com.example.fc_plaza_service.infrastructure.entrypoint.dto.DishRequest;
+import com.example.fc_plaza_service.infrastructure.entrypoint.dto.DishUpdateRequest;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+
+@ExtendWith(MockitoExtension.class)
+class DishControllerTest {
+
+  @InjectMocks private DishController dishController;
+
+  @Mock private DishApplicationService dishApplicationService;
+
+  private MockMvc mockMvc;
+  private ObjectMapper objectMapper;
+
+  @BeforeEach
+  void setUp() {
+    mockMvc = MockMvcBuilders.standaloneSetup(dishController).build();
+    objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
+  }
+
+  @Test
+  void createDish_Success() throws Exception {
+    Long restaurantId = 1L;
+    var dishRequest = getValidDishRequest();
+    String requestJson = objectMapper.writeValueAsString(dishRequest);
+
+    doNothing().when(dishApplicationService).createDish(eq(restaurantId), any(DishRequest.class));
+
+    mockMvc
+        .perform(
+            MockMvcRequestBuilders.post(RESTAURANT_BASE_PATH + "/" + restaurantId + DISH_BASE_PATH)
+                .content(requestJson)
+                .contentType(MediaType.APPLICATION_JSON))
+        .andExpect(status().isCreated())
+        .andExpect(jsonPath("$.data").value(DISH_CREATED_SUCCESSFULLY.getMessage()))
+        .andExpect(jsonPath("$.error").doesNotExist());
+  }
+
+  @Test
+  void createDish_BadRequest() throws Exception {
+    Long restaurantId = 1L;
+    var dishRequest = getInvalidDishRequest();
+    String requestJson = objectMapper.writeValueAsString(dishRequest);
+
+    mockMvc
+        .perform(
+            MockMvcRequestBuilders.post(RESTAURANT_BASE_PATH + "/" + restaurantId + DISH_BASE_PATH)
+                .content(requestJson)
+                .contentType(MediaType.APPLICATION_JSON))
+        .andExpect(status().isBadRequest());
+  }
+
+  @Test
+  void updateDish_Success() throws Exception {
+    Long restaurantId = 1L;
+    Long dishId = 2L;
+    var updateRequest = getValidDishUpdateRequest();
+    String requestJson = objectMapper.writeValueAsString(updateRequest);
+
+    doNothing()
+        .when(dishApplicationService)
+        .updateDish(eq(restaurantId), eq(dishId), any(DishUpdateRequest.class));
+
+    mockMvc
+        .perform(
+            MockMvcRequestBuilders.patch(
+                    RESTAURANT_BASE_PATH + "/" + restaurantId + DISH_BASE_PATH + "/" + dishId)
+                .content(requestJson)
+                .contentType(MediaType.APPLICATION_JSON))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.data").value(DISH_UPDATED_SUCCESSFULLY.getMessage()))
+        .andExpect(jsonPath("$.error").doesNotExist());
+  }
+
+  @Test
+  void updateDish_BadRequest() throws Exception {
+    Long restaurantId = 1L;
+    Long dishId = 2L;
+    var updateRequest = getInvalidDishUpdateRequest();
+    String requestJson = objectMapper.writeValueAsString(updateRequest);
+
+    mockMvc
+        .perform(
+            MockMvcRequestBuilders.patch(
+                    RESTAURANT_BASE_PATH + "/" + restaurantId + DISH_BASE_PATH + "/" + dishId)
+                .content(requestJson)
+                .contentType(MediaType.APPLICATION_JSON))
+        .andExpect(status().isBadRequest());
+  }
+}

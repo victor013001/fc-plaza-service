@@ -60,4 +60,27 @@ class RestaurantPersistenceAdapterTest {
     assertFalse(result);
     verify(restaurantRepository).existsByPhone(phone);
   }
+
+  @Test
+  void existsById_ShouldReturnTrue() {
+    Long restaurantId = 1L;
+    when(restaurantRepository.existsById(restaurantId)).thenReturn(true);
+
+    boolean result = restaurantPersistenceAdapter.existsById(restaurantId);
+
+    assertTrue(result);
+    verify(restaurantRepository).existsById(restaurantId);
+  }
+
+  @Test
+  void getLandlordId_ShouldReturnUserId() {
+    Long restaurantId = 1L;
+    Long expectedUserId = 100L;
+    when(restaurantRepository.findUserIdByRestaurantId(restaurantId)).thenReturn(expectedUserId);
+
+    Long result = restaurantPersistenceAdapter.getLandlordId(restaurantId);
+
+    assertEquals(expectedUserId, result);
+    verify(restaurantRepository).findUserIdByRestaurantId(restaurantId);
+  }
 }

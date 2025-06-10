@@ -39,12 +39,14 @@ public class DishPersistenceAdapter implements DishPersistencePort {
   }
 
   @Override
+  @Transactional(readOnly = true)
   public boolean existsById(Long dishId, Long restaurantId) {
     log.info("{} Checking if dish with id: {} exists.", LOG_PREFIX, dishId);
     return dishRepository.existsByIdAndRestaurantId(dishId, restaurantId);
   }
 
   @Override
+  @Transactional
   public void updateDish(Dish dish, Long dishId) {
     log.info("{} Updating dish with id: {}.", LOG_PREFIX, dishId);
     dishRepository.updateDish(dishId, dish.price(), dish.description());

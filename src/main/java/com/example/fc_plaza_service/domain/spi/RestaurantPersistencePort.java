@@ -10,4 +10,6 @@ public interface RestaurantPersistencePort {
   boolean existsByPhone(String phone);
 
   boolean existsById(Long restaurantId);
+
+  Long getLandlordId(Long restaurantId);
 }

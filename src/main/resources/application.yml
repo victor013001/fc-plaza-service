@@ -3,3 +3,6 @@ spring:
     name: FC Plaza Service
   profiles:
     active: ${ACTIVE_PROFILE:none}
+
+server:
+  port: 8081

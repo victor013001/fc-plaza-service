@@ -1,6 +1,7 @@
 package com.example.fc_plaza_service.domain.usecase;
 
 import com.example.fc_plaza_service.domain.api.DishServicePort;
+import com.example.fc_plaza_service.domain.api.UserServicePort;
 import com.example.fc_plaza_service.domain.exceptions.standard_exception.BadRequest;
 import com.example.fc_plaza_service.domain.model.Dish;
 import com.example.fc_plaza_service.domain.spi.DishPersistencePort;
@@ -12,11 +13,13 @@ public class DishUseCase implements DishServicePort {
 
   private final DishPersistencePort dishPersistencePort;
   private final RestaurantPersistencePort restaurantPersistencePort;
+  private final UserServicePort userServicePort;
 
   @Override
   public void saveDish(Dish dish) {
     validRestaurantId(dish.restaurantId());
     validName(dish.name(), dish.restaurantId());
+    validLandlord(dish.restaurantId());
     dishPersistencePort.saveDish(dish);
   }
 
@@ -24,7 +27,15 @@ public class DishUseCase implements DishServicePort {
   public void updateDish(Dish dish, Long dishId) {
     validRestaurantId(dish.restaurantId());
     validDishId(dishId, dish.restaurantId());
+    validLandlord(dish.restaurantId());
     dishPersistencePort.updateDish(dish, dishId);
+  }
+
+  private void validLandlord(Long restaurantId) {
+    if (!userServicePort.doesLandlordBelongToEmail(
+        restaurantPersistencePort.getLandlordId(restaurantId))) {
+      throw new BadRequest();
+    }
   }
 
   private void validDishId(Long dishId, Long restaurantId) {

@@ -55,7 +55,8 @@ public class UseCasesConfig {
   @Bean
   public DishServicePort dishServicePort(
       DishPersistencePort dishPersistencePort,
-      RestaurantPersistencePort restaurantPersistencePort) {
-    return new DishUseCase(dishPersistencePort, restaurantPersistencePort);
+      RestaurantPersistencePort restaurantPersistencePort,
+      UserServicePort userServicePort) {
+    return new DishUseCase(dishPersistencePort, restaurantPersistencePort, userServicePort);
   }
 }

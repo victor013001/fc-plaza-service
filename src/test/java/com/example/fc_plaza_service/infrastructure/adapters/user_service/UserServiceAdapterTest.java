@@ -44,4 +44,28 @@ class UserServiceAdapterTest {
     assertThrows(BadRequest.class, () -> userServiceAdapter.existsLandlordById(userId));
     verify(userFeignClient).findLandlordById(userId);
   }
+
+  @Test
+  void doesLandlordBelongToEmail_ShouldReturnTrue() {
+    Long userId = 1L;
+
+    when(userFeignClient.doesLandlordBelongToEmail(userId))
+        .thenReturn(new DefaultServerResponse<>(true, null));
+
+    boolean result = userServiceAdapter.doesLandlordBelongToEmail(userId);
+
+    assertTrue(result);
+    verify(userFeignClient).doesLandlordBelongToEmail(userId);
+  }
+
+  @Test
+  void doesLandlordBelongToEmail_ShouldThrowBadRequest() {
+    Long userId = 2L;
+
+    when(userFeignClient.doesLandlordBelongToEmail(userId))
+        .thenReturn(new DefaultServerResponse<>(null, null));
+
+    assertThrows(BadRequest.class, () -> userServiceAdapter.doesLandlordBelongToEmail(userId));
+    verify(userFeignClient).doesLandlordBelongToEmail(userId);
+  }
 }

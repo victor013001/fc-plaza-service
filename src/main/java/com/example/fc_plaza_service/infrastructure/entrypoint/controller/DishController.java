@@ -29,6 +29,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -53,6 +54,7 @@ public class DishController {
         @ApiResponse(responseCode = SERVER_ERROR, description = SERVER_ERROR_MSG),
       })
   @PostMapping("/{restaurant_id}" + DISH_BASE_PATH)
+  @PreAuthorize("hasAuthority('landlord')")
   public ResponseEntity<DefaultServerResponse<String, StandardError>> createDish(
       @PathVariable(name = "restaurant_id") Long restaurantId,
       @Valid @RequestBody final DishRequest dishRequest) {
@@ -69,6 +71,7 @@ public class DishController {
         @ApiResponse(responseCode = SERVER_ERROR, description = SERVER_ERROR_MSG),
       })
   @PatchMapping("/{restaurant_id}" + DISH_BASE_PATH + "/{dish_id}")
+  @PreAuthorize("hasAuthority('landlord')")
   public ResponseEntity<DefaultServerResponse<String, StandardError>> updateDish(
       @PathVariable(name = "restaurant_id") Long restaurantId,
       @PathVariable(name = "dish_id") Long dishId,

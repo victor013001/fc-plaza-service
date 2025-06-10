@@ -19,8 +19,16 @@ public class UserServiceAdapter implements UserServicePort {
 
   @Override
   public boolean existsLandlordById(Long userId) {
-    log.info("{} Checking if user with id: {} exists and is a landlord.", LOG_PREFIX, userId);
+    log.info("{} Checking if user with id: {} exists and is a landlord", LOG_PREFIX, userId);
     return Optional.of(userFeignClient.findLandlordById(userId))
+        .map(DefaultServerResponse::data)
+        .orElseThrow(BadRequest::new);
+  }
+
+  @Override
+  public boolean doesLandlordBelongToEmail(Long userId) {
+    log.info("{} Checking if user with id: {} belongs to request email", LOG_PREFIX, userId);
+    return Optional.of(userFeignClient.doesLandlordBelongToEmail(userId))
         .map(DefaultServerResponse::data)
         .orElseThrow(BadRequest::new);
   }

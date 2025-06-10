@@ -4,11 +4,15 @@ import com.example.fc_plaza_service.domain.exceptions.StandardError;
 import com.example.fc_plaza_service.infrastructure.entrypoint.dto.DefaultServerResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.PathVariable;
 
 @FeignClient(name = "user-service", url = "http://localhost:8080")
 public interface UserFeignClient {
-  @GetMapping("/user/landlord/exists")
+  @GetMapping("/api/v1/user/landlord/exists/{landlord_id}")
   DefaultServerResponse<Boolean, StandardError> findLandlordById(
-      @RequestParam("userId") Long landlordId);
+      @PathVariable(name = "landlord_id") Long landlordId);
+
+  @GetMapping("/api/v1/user/landlord/{landlord_id}/belongs")
+  DefaultServerResponse<Boolean, StandardError> doesLandlordBelongToEmail(
+      @PathVariable("landlord_id") Long landlordId);
 }

@@ -10,6 +10,7 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 import com.example.fc_plaza_service.domain.api.UserServicePort;
+import com.example.fc_plaza_service.domain.enums.ProductStatus;
 import com.example.fc_plaza_service.domain.exceptions.standard_exception.BadRequest;
 import com.example.fc_plaza_service.domain.spi.DishPersistencePort;
 import com.example.fc_plaza_service.domain.spi.RestaurantPersistencePort;
@@ -122,5 +123,25 @@ class DishUseCaseTest {
     verify(restaurantPersistencePort).existsById(dish.restaurantId());
     verify(dishPersistencePort).existsById(dishId, dish.restaurantId());
     verifyNoMoreInteractions(dishPersistencePort, userServicePort, restaurantPersistencePort);
+  }
+
+  @Test
+  void updateStatus_success() {
+    Long restaurantId = 1L;
+    Long dishId = 2L;
+    ProductStatus status = ProductStatus.DISABLED;
+
+    when(restaurantPersistencePort.existsById(restaurantId)).thenReturn(true);
+    when(dishPersistencePort.existsById(dishId, restaurantId)).thenReturn(true);
+    when(restaurantPersistencePort.getLandlordId(restaurantId)).thenReturn(10L);
+    when(userServicePort.doesLandlordBelongToEmail(10L)).thenReturn(true);
+
+    dishUseCase.updateStatus(restaurantId, dishId, status);
+
+    verify(restaurantPersistencePort).existsById(restaurantId);
+    verify(dishPersistencePort).existsById(dishId, restaurantId);
+    verify(restaurantPersistencePort).getLandlordId(restaurantId);
+    verify(userServicePort).doesLandlordBelongToEmail(10L);
+    verify(dishPersistencePort).updateActive(dishId, status.isActive());
   }
 }

@@ -2,13 +2,17 @@ package com.example.fc_plaza_service.application.service.hanlder;
 
 import static com.example.fc_plaza_service.util.data.DishRequestData.getValidDishRequest;
 import static com.example.fc_plaza_service.util.data.DishRequestData.getValidDishUpdateRequest;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 
 import com.example.fc_plaza_service.application.mapper.DishMapper;
 import com.example.fc_plaza_service.application.mapper.DishMapperImpl;
 import com.example.fc_plaza_service.domain.api.DishServicePort;
+import com.example.fc_plaza_service.domain.enums.ProductStatus;
+import com.example.fc_plaza_service.domain.exceptions.standard_exception.BadRequest;
 import com.example.fc_plaza_service.domain.model.Dish;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -47,5 +51,28 @@ class DishApplicationServiceHandlerTest {
 
     verify(dishMapper).toModel(updateRequest, restaurantId);
     verify(dishService).updateDish(any(Dish.class), eq(dishId));
+  }
+
+  @Test
+  void updateStatusDish_shouldCallServiceWithValidStatus() {
+    Long restaurantId = 1L;
+    Long dishId = 10L;
+    ProductStatus status = ProductStatus.ENABLED;
+
+    dishApplicationServiceHandler.updateStatusDish(restaurantId, dishId, status);
+
+    verify(dishService).updateStatus(restaurantId, dishId, status);
+  }
+
+  @Test
+  void updateStatusDish_shouldThrowBadRequestWhenStatusIsNull() {
+    Long restaurantId = 1L;
+    Long dishId = 10L;
+
+    assertThrows(
+        BadRequest.class,
+        () -> dishApplicationServiceHandler.updateStatusDish(restaurantId, dishId, null));
+
+    verifyNoInteractions(dishService);
   }
 }

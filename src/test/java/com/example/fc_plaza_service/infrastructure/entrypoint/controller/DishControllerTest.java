@@ -1,6 +1,7 @@
 package com.example.fc_plaza_service.infrastructure.entrypoint.controller;
 
 import static com.example.fc_plaza_service.domain.constants.RouterConst.DISH_BASE_PATH;
+import static com.example.fc_plaza_service.domain.constants.RouterConst.ENABLE_BASE_PATH;
 import static com.example.fc_plaza_service.domain.constants.RouterConst.RESTAURANT_BASE_PATH;
 import static com.example.fc_plaza_service.domain.enums.ServerResponses.DISH_CREATED_SUCCESSFULLY;
 import static com.example.fc_plaza_service.domain.enums.ServerResponses.DISH_UPDATED_SUCCESSFULLY;
@@ -15,6 +16,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.example.fc_plaza_service.application.service.DishApplicationService;
+import com.example.fc_plaza_service.domain.enums.ProductStatus;
 import com.example.fc_plaza_service.infrastructure.entrypoint.dto.DishRequest;
 import com.example.fc_plaza_service.infrastructure.entrypoint.dto.DishUpdateRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -114,5 +116,30 @@ class DishControllerTest {
                 .content(requestJson)
                 .contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isBadRequest());
+  }
+
+  @Test
+  void enableDish_Success() throws Exception {
+    Long restaurantId = 1L;
+    Long dishId = 2L;
+    ProductStatus status = ProductStatus.DISABLED;
+
+    doNothing().when(dishApplicationService).updateStatusDish(restaurantId, dishId, status);
+
+    mockMvc
+        .perform(
+            MockMvcRequestBuilders.patch(
+                    RESTAURANT_BASE_PATH
+                        + "/"
+                        + restaurantId
+                        + DISH_BASE_PATH
+                        + "/"
+                        + dishId
+                        + ENABLE_BASE_PATH)
+                .queryParam("status", status.name())
+                .contentType(MediaType.APPLICATION_JSON))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.data").value(DISH_UPDATED_SUCCESSFULLY.getMessage()))
+        .andExpect(jsonPath("$.error").doesNotExist());
   }
 }

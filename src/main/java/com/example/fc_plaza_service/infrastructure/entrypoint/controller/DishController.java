@@ -11,13 +11,16 @@ import static com.example.fc_plaza_service.domain.constants.MsgConst.DISH_CREATE
 import static com.example.fc_plaza_service.domain.constants.MsgConst.DISH_UPDATED_SUCCESSFULLY_MSG;
 import static com.example.fc_plaza_service.domain.constants.MsgConst.SERVER_ERROR_MSG;
 import static com.example.fc_plaza_service.domain.constants.RouterConst.DISH_BASE_PATH;
+import static com.example.fc_plaza_service.domain.constants.RouterConst.ENABLE_BASE_PATH;
 import static com.example.fc_plaza_service.domain.constants.RouterConst.RESTAURANT_BASE_PATH;
 import static com.example.fc_plaza_service.domain.constants.SwaggerConst.CREATE_DISH_OPERATION;
+import static com.example.fc_plaza_service.domain.constants.SwaggerConst.ENABLE_DISH_OPERATION;
 import static com.example.fc_plaza_service.domain.constants.SwaggerConst.UPDATE_DISH_OPERATION;
 import static com.example.fc_plaza_service.domain.enums.ServerResponses.DISH_CREATED_SUCCESSFULLY;
 import static com.example.fc_plaza_service.domain.enums.ServerResponses.DISH_UPDATED_SUCCESSFULLY;
 
 import com.example.fc_plaza_service.application.service.DishApplicationService;
+import com.example.fc_plaza_service.domain.enums.ProductStatus;
 import com.example.fc_plaza_service.domain.exceptions.StandardError;
 import com.example.fc_plaza_service.infrastructure.entrypoint.dto.DefaultServerResponse;
 import com.example.fc_plaza_service.infrastructure.entrypoint.dto.DishRequest;
@@ -26,6 +29,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
+import jakarta.websocket.server.PathParam;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -77,6 +81,24 @@ public class DishController {
       @PathVariable(name = "dish_id") Long dishId,
       @Valid @RequestBody final DishUpdateRequest dishUpdateRequest) {
     dishApplicationService.updateDish(restaurantId, dishId, dishUpdateRequest);
+    return ResponseEntity.status(DISH_UPDATED_SUCCESSFULLY.getHttpStatus())
+        .body(new DefaultServerResponse<>(DISH_UPDATED_SUCCESSFULLY.getMessage(), null));
+  }
+
+  @Operation(summary = ENABLE_DISH_OPERATION)
+  @ApiResponses(
+      value = {
+        @ApiResponse(responseCode = OK, description = DISH_UPDATED_SUCCESSFULLY_MSG),
+        @ApiResponse(responseCode = BAD_REQUEST, description = BAD_REQUEST_MSG),
+        @ApiResponse(responseCode = SERVER_ERROR, description = SERVER_ERROR_MSG),
+      })
+  @PatchMapping("/{restaurant_id}" + DISH_BASE_PATH + "/{dish_id}" + ENABLE_BASE_PATH)
+  @PreAuthorize("hasAuthority('landlord')")
+  public ResponseEntity<DefaultServerResponse<String, StandardError>> enableDish(
+      @PathVariable(name = "restaurant_id") Long restaurantId,
+      @PathVariable(name = "dish_id") Long dishId,
+      @PathParam("status") ProductStatus status) {
+    dishApplicationService.updateStatusDish(restaurantId, dishId, status);
     return ResponseEntity.status(DISH_UPDATED_SUCCESSFULLY.getHttpStatus())
         .body(new DefaultServerResponse<>(DISH_UPDATED_SUCCESSFULLY.getMessage(), null));
   }

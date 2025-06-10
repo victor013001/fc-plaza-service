@@ -20,4 +20,8 @@ public interface DishRepository extends JpaRepository<DishEntity, Long> {
       @Param("dishId") Long dishId,
       @Param("price") Double price,
       @Param("description") String description);
+
+  @Modifying
+  @Query("UPDATE DishEntity d SET d.active = :active WHERE d.id = :id")
+  void updateActiveById(@Param("id") Long id, @Param("active") boolean active);
 }

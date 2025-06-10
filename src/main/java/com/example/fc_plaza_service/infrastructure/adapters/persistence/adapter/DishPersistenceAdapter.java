@@ -51,4 +51,11 @@ public class DishPersistenceAdapter implements DishPersistencePort {
     log.info("{} Updating dish with id: {}.", LOG_PREFIX, dishId);
     dishRepository.updateDish(dishId, dish.price(), dish.description());
   }
+
+  @Override
+  @Transactional
+  public void updateActive(Long dishId, boolean active) {
+    log.info("{} Updating dish: {} active status to: {}", LOG_PREFIX, dishId, active);
+    dishRepository.updateActiveById(dishId, active);
+  }
 }

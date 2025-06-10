@@ -87,4 +87,14 @@ class DishPersistenceAdapterTest {
 
     verify(dishRepository).updateDish(dishId, dish.price(), dish.description());
   }
+
+  @Test
+  void updateActive_ShouldCallRepositoryUpdateActiveById() {
+    Long dishId = 1L;
+    boolean active = false;
+
+    dishPersistenceAdapter.updateActive(dishId, active);
+
+    verify(dishRepository).updateActiveById(dishId, active);
+  }
 }

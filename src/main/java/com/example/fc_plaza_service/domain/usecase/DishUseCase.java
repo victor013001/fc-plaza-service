@@ -2,6 +2,7 @@ package com.example.fc_plaza_service.domain.usecase;
 
 import com.example.fc_plaza_service.domain.api.DishServicePort;
 import com.example.fc_plaza_service.domain.api.UserServicePort;
+import com.example.fc_plaza_service.domain.enums.ProductStatus;
 import com.example.fc_plaza_service.domain.exceptions.standard_exception.BadRequest;
 import com.example.fc_plaza_service.domain.model.Dish;
 import com.example.fc_plaza_service.domain.spi.DishPersistencePort;
@@ -29,6 +30,14 @@ public class DishUseCase implements DishServicePort {
     validDishId(dishId, dish.restaurantId());
     validLandlord(dish.restaurantId());
     dishPersistencePort.updateDish(dish, dishId);
+  }
+
+  @Override
+  public void updateStatus(Long restaurantId, Long dishId, ProductStatus status) {
+    validRestaurantId(restaurantId);
+    validDishId(dishId, restaurantId);
+    validLandlord(restaurantId);
+    dishPersistencePort.updateActive(dishId, status.isActive());
   }
 
   private void validLandlord(Long restaurantId) {

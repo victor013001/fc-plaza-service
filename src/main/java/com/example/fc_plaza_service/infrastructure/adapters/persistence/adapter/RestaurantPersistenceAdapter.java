@@ -4,8 +4,11 @@ import com.example.fc_plaza_service.domain.model.Restaurant;
 import com.example.fc_plaza_service.domain.spi.RestaurantPersistencePort;
 import com.example.fc_plaza_service.infrastructure.adapters.persistence.mapper.RestaurantEntityMapper;
 import com.example.fc_plaza_service.infrastructure.adapters.persistence.repository.RestaurantRepository;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
@@ -46,5 +49,17 @@ public class RestaurantPersistenceAdapter implements RestaurantPersistencePort {
   @Override
   public Long getLandlordId(Long restaurantId) {
     return restaurantRepository.findUserIdByRestaurantId(restaurantId);
+  }
+
+  @Override
+  public List<Restaurant> getRestaurants(Integer page, Integer size, String direction) {
+    return restaurantRepository.findAll(buildPageRequest(page, size, direction)).stream()
+        .map(restaurantEntityMapper::toModel)
+        .toList();
+  }
+
+  private PageRequest buildPageRequest(Integer page, Integer size, String direction) {
+    return PageRequest.of(
+        page, size, Sort.by(Sort.Direction.fromString(direction.toLowerCase()), "name"));
   }
 }

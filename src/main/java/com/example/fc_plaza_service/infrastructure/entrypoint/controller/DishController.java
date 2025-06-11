@@ -22,9 +22,9 @@ import static com.example.fc_plaza_service.domain.enums.ServerResponses.DISH_UPD
 import com.example.fc_plaza_service.application.service.DishApplicationService;
 import com.example.fc_plaza_service.domain.enums.ProductStatus;
 import com.example.fc_plaza_service.domain.exceptions.StandardError;
-import com.example.fc_plaza_service.infrastructure.entrypoint.dto.DefaultServerResponse;
-import com.example.fc_plaza_service.infrastructure.entrypoint.dto.DishRequest;
-import com.example.fc_plaza_service.infrastructure.entrypoint.dto.DishUpdateRequest;
+import com.example.fc_plaza_service.infrastructure.entrypoint.dto.request.DefaultServerResponse;
+import com.example.fc_plaza_service.infrastructure.entrypoint.dto.request.DishRequest;
+import com.example.fc_plaza_service.infrastructure.entrypoint.dto.request.DishUpdateRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;

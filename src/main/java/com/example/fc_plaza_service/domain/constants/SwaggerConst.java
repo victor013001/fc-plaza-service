@@ -8,4 +8,5 @@ public class SwaggerConst {
   public static final String CREATE_DISH_OPERATION = "Create new dish";
   public static final String UPDATE_DISH_OPERATION = "Update dish";
   public static final String ENABLE_DISH_OPERATION = "Enable or disable a dish";
+  public static final String GET_RESTAURANTS_OPERATION = "Get restaurants.";
 }

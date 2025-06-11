@@ -10,4 +10,6 @@ import org.mapstruct.MappingConstants;
 public interface RestaurantEntityMapper {
   @Mapping(target = "id", ignore = true)
   RestaurantEntity toEntity(Restaurant restaurant);
+
+  Restaurant toModel(RestaurantEntity restaurant);
 }

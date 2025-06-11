@@ -7,6 +7,8 @@ import com.example.fc_plaza_service.domain.enums.ProductStatus;
 import com.example.fc_plaza_service.domain.exceptions.standard_exception.BadRequest;
 import com.example.fc_plaza_service.infrastructure.entrypoint.dto.request.DishRequest;
 import com.example.fc_plaza_service.infrastructure.entrypoint.dto.request.DishUpdateRequest;
+import com.example.fc_plaza_service.infrastructure.entrypoint.dto.response.DishResponse;
+import java.util.List;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -34,5 +36,12 @@ public class DishApplicationServiceHandler implements DishApplicationService {
       throw new BadRequest();
     }
     dishService.updateStatus(restaurantId, dishId, status);
+  }
+
+  @Override
+  public List<DishResponse> getRestaurantMenu(Long restaurantId, Integer page, Integer size) {
+    return dishService.getMenu(restaurantId, page, size).stream()
+        .map(dishMapper::toResponse)
+        .toList();
   }
 }

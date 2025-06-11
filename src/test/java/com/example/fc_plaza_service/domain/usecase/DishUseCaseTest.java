@@ -1,8 +1,11 @@
 package com.example.fc_plaza_service.domain.usecase;
 
+import static com.example.fc_plaza_service.util.data.DishCategoryData.getDishCategory;
 import static com.example.fc_plaza_service.util.data.DishData.getValidDish;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
@@ -14,6 +17,7 @@ import com.example.fc_plaza_service.domain.enums.ProductStatus;
 import com.example.fc_plaza_service.domain.exceptions.standard_exception.BadRequest;
 import com.example.fc_plaza_service.domain.spi.DishPersistencePort;
 import com.example.fc_plaza_service.domain.spi.RestaurantPersistencePort;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -143,5 +147,22 @@ class DishUseCaseTest {
     verify(restaurantPersistencePort).getLandlordId(restaurantId);
     verify(userServicePort).doesLandlordBelongToEmail(10L);
     verify(dishPersistencePort).updateActive(dishId, status.isActive());
+  }
+
+  @Test
+  void getMenu_success() {
+    Long restaurantId = 1L;
+    int page = 0;
+    int size = 10;
+    var menu = List.of(getDishCategory());
+
+    when(restaurantPersistencePort.existsById(restaurantId)).thenReturn(true);
+    when(dishPersistencePort.getMenu(anyLong(), anyInt(), anyInt())).thenReturn(menu);
+
+    var result = dishUseCase.getMenu(restaurantId, page, size);
+
+    assertEquals(menu, result);
+    verify(restaurantPersistencePort).existsById(restaurantId);
+    verify(dishPersistencePort).getMenu(restaurantId, page, size);
   }
 }

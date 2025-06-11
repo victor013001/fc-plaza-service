@@ -1,12 +1,16 @@
 package com.example.fc_plaza_service.application.service.hanlder;
 
+import static com.example.fc_plaza_service.util.data.DishCategoryData.getDishCategory;
 import static com.example.fc_plaza_service.util.data.DishRequestData.getValidDishRequest;
 import static com.example.fc_plaza_service.util.data.DishRequestData.getValidDishUpdateRequest;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
+import static org.mockito.Mockito.when;
 
 import com.example.fc_plaza_service.application.mapper.DishMapper;
 import com.example.fc_plaza_service.application.mapper.DishMapperImpl;
@@ -14,6 +18,8 @@ import com.example.fc_plaza_service.domain.api.DishServicePort;
 import com.example.fc_plaza_service.domain.enums.ProductStatus;
 import com.example.fc_plaza_service.domain.exceptions.standard_exception.BadRequest;
 import com.example.fc_plaza_service.domain.model.Dish;
+import com.example.fc_plaza_service.domain.model.DishCategory;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -74,5 +80,21 @@ class DishApplicationServiceHandlerTest {
         () -> dishApplicationServiceHandler.updateStatusDish(restaurantId, dishId, null));
 
     verifyNoInteractions(dishService);
+  }
+
+  @Test
+  void getRestaurantMenu_shouldReturnMappedDishResponses() {
+    Long restaurantId = 1L;
+    Integer page = 0;
+    Integer size = 5;
+
+    var dishCategories = List.of(getDishCategory());
+    when(dishService.getMenu(restaurantId, page, size)).thenReturn(dishCategories);
+
+    var result = dishApplicationServiceHandler.getRestaurantMenu(restaurantId, page, size);
+
+    assertEquals(dishCategories.size(), result.size());
+    verify(dishService).getMenu(restaurantId, page, size);
+    verify(dishMapper, times(dishCategories.size())).toResponse(any(DishCategory.class));
   }
 }

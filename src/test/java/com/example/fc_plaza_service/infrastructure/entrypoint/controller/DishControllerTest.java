@@ -2,6 +2,7 @@ package com.example.fc_plaza_service.infrastructure.entrypoint.controller;
 
 import static com.example.fc_plaza_service.domain.constants.RouterConst.DISH_BASE_PATH;
 import static com.example.fc_plaza_service.domain.constants.RouterConst.ENABLE_BASE_PATH;
+import static com.example.fc_plaza_service.domain.constants.RouterConst.MENU_BASE_PATH;
 import static com.example.fc_plaza_service.domain.constants.RouterConst.RESTAURANT_BASE_PATH;
 import static com.example.fc_plaza_service.domain.enums.ServerResponses.DISH_CREATED_SUCCESSFULLY;
 import static com.example.fc_plaza_service.domain.enums.ServerResponses.DISH_UPDATED_SUCCESSFULLY;
@@ -9,9 +10,11 @@ import static com.example.fc_plaza_service.util.data.DishRequestData.getInvalidD
 import static com.example.fc_plaza_service.util.data.DishRequestData.getInvalidDishUpdateRequest;
 import static com.example.fc_plaza_service.util.data.DishRequestData.getValidDishRequest;
 import static com.example.fc_plaza_service.util.data.DishRequestData.getValidDishUpdateRequest;
+import static com.example.fc_plaza_service.util.data.DishResponseData.getValidDishResponse;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -21,6 +24,7 @@ import com.example.fc_plaza_service.infrastructure.entrypoint.dto.request.DishRe
 import com.example.fc_plaza_service.infrastructure.entrypoint.dto.request.DishUpdateRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -140,6 +144,27 @@ class DishControllerTest {
                 .contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.data").value(DISH_UPDATED_SUCCESSFULLY.getMessage()))
+        .andExpect(jsonPath("$.error").doesNotExist());
+  }
+
+  @Test
+  void getRestaurantMenu_Success() throws Exception {
+    var restaurantId = 1L;
+    int page = 0;
+    int size = 10;
+    var menu = List.of(getValidDishResponse());
+
+    when(dishApplicationService.getRestaurantMenu(restaurantId, page, size)).thenReturn(menu);
+
+    mockMvc
+        .perform(
+            MockMvcRequestBuilders.get(RESTAURANT_BASE_PATH + "/" + restaurantId + MENU_BASE_PATH)
+                .param("page", String.valueOf(page))
+                .param("size", String.valueOf(size))
+                .contentType(MediaType.APPLICATION_JSON))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.data").isArray())
+        .andExpect(jsonPath("$.data[0].name").value(menu.get(0).name()))
         .andExpect(jsonPath("$.error").doesNotExist());
   }
 }

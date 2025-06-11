@@ -15,4 +15,7 @@ public interface UserFeignClient {
   @GetMapping("/api/v1/user/landlord/{landlord_id}/belongs")
   DefaultServerResponse<Boolean, StandardError> doesLandlordBelongToEmail(
       @PathVariable("landlord_id") Long landlordId);
+
+  @GetMapping("/api/v1/user")
+  DefaultServerResponse<Long, StandardError> getCurrentUserId();
 }

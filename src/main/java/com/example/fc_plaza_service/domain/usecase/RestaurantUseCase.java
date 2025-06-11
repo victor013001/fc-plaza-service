@@ -1,10 +1,10 @@
 package com.example.fc_plaza_service.domain.usecase;
 
 import com.example.fc_plaza_service.domain.api.RestaurantServicePort;
-import com.example.fc_plaza_service.domain.api.UserServicePort;
 import com.example.fc_plaza_service.domain.exceptions.standard_exception.BadRequest;
 import com.example.fc_plaza_service.domain.model.Restaurant;
 import com.example.fc_plaza_service.domain.spi.RestaurantPersistencePort;
+import com.example.fc_plaza_service.domain.spi.UserServicePort;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 

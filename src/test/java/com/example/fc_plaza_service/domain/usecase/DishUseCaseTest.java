@@ -12,11 +12,11 @@ import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
-import com.example.fc_plaza_service.domain.api.UserServicePort;
 import com.example.fc_plaza_service.domain.enums.ProductStatus;
 import com.example.fc_plaza_service.domain.exceptions.standard_exception.BadRequest;
 import com.example.fc_plaza_service.domain.spi.DishPersistencePort;
 import com.example.fc_plaza_service.domain.spi.RestaurantPersistencePort;
+import com.example.fc_plaza_service.domain.spi.UserServicePort;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

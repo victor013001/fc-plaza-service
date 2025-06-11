@@ -8,4 +8,5 @@ public class RouterConst {
   public static final String DISH_BASE_PATH = "/dish";
   public static final String ENABLE_BASE_PATH = "/enable";
   public static final String MENU_BASE_PATH = "/menu";
+  public static final String ORDER_BASE_PATH = "/order";
 }

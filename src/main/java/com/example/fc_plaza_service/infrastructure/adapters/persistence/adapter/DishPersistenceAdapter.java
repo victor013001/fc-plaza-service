@@ -1,14 +1,17 @@
 package com.example.fc_plaza_service.infrastructure.adapters.persistence.adapter;
 
 import com.example.fc_plaza_service.domain.model.Dish;
+import com.example.fc_plaza_service.domain.model.DishCategory;
 import com.example.fc_plaza_service.domain.spi.DishPersistencePort;
 import com.example.fc_plaza_service.infrastructure.adapters.persistence.entity.DishEntity;
 import com.example.fc_plaza_service.infrastructure.adapters.persistence.mapper.DishEntityMapper;
 import com.example.fc_plaza_service.infrastructure.adapters.persistence.repository.CategoryRepository;
 import com.example.fc_plaza_service.infrastructure.adapters.persistence.repository.DishRepository;
 import com.example.fc_plaza_service.infrastructure.adapters.persistence.repository.RestaurantRepository;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
@@ -57,5 +60,20 @@ public class DishPersistenceAdapter implements DishPersistencePort {
   public void updateActive(Long dishId, boolean active) {
     log.info("{} Updating dish: {} active status to: {}", LOG_PREFIX, dishId, active);
     dishRepository.updateActiveById(dishId, active);
+  }
+
+  @Override
+  public List<DishCategory> getMenu(Long restaurantId, Integer page, Integer size) {
+    log.info("{} Getting restaurant: {} menu, sorted by category.", LOG_PREFIX, restaurantId);
+    return dishRepository
+        .findByRestaurantIdAndActiveTrueOrderByCategoryId(
+            restaurantId, buildPageRequest(page, size))
+        .stream()
+        .map(dishEntityMapper::toModel)
+        .toList();
+  }
+
+  private PageRequest buildPageRequest(Integer page, Integer size) {
+    return PageRequest.of(page, size);
   }
 }

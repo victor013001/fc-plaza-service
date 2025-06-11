@@ -5,8 +5,10 @@ import com.example.fc_plaza_service.domain.api.UserServicePort;
 import com.example.fc_plaza_service.domain.enums.ProductStatus;
 import com.example.fc_plaza_service.domain.exceptions.standard_exception.BadRequest;
 import com.example.fc_plaza_service.domain.model.Dish;
+import com.example.fc_plaza_service.domain.model.DishCategory;
 import com.example.fc_plaza_service.domain.spi.DishPersistencePort;
 import com.example.fc_plaza_service.domain.spi.RestaurantPersistencePort;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -38,6 +40,12 @@ public class DishUseCase implements DishServicePort {
     validDishId(dishId, restaurantId);
     validLandlord(restaurantId);
     dishPersistencePort.updateActive(dishId, status.isActive());
+  }
+
+  @Override
+  public List<DishCategory> getMenu(Long restaurantId, Integer page, Integer size) {
+    validRestaurantId(restaurantId);
+    return dishPersistencePort.getMenu(restaurantId, page, size);
   }
 
   private void validLandlord(Long restaurantId) {

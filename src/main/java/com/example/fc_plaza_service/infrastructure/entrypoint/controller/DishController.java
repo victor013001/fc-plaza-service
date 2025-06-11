@@ -4,6 +4,7 @@ import static com.example.fc_plaza_service.domain.constants.HttpStatusConst.BAD_
 import static com.example.fc_plaza_service.domain.constants.HttpStatusConst.CONFLICT;
 import static com.example.fc_plaza_service.domain.constants.HttpStatusConst.CREATED;
 import static com.example.fc_plaza_service.domain.constants.HttpStatusConst.OK;
+import static com.example.fc_plaza_service.domain.constants.HttpStatusConst.OK_INT;
 import static com.example.fc_plaza_service.domain.constants.HttpStatusConst.SERVER_ERROR;
 import static com.example.fc_plaza_service.domain.constants.MsgConst.BAD_REQUEST_MSG;
 import static com.example.fc_plaza_service.domain.constants.MsgConst.DISH_ALREADY_EXISTS_MSG;
@@ -12,9 +13,11 @@ import static com.example.fc_plaza_service.domain.constants.MsgConst.DISH_UPDATE
 import static com.example.fc_plaza_service.domain.constants.MsgConst.SERVER_ERROR_MSG;
 import static com.example.fc_plaza_service.domain.constants.RouterConst.DISH_BASE_PATH;
 import static com.example.fc_plaza_service.domain.constants.RouterConst.ENABLE_BASE_PATH;
+import static com.example.fc_plaza_service.domain.constants.RouterConst.MENU_BASE_PATH;
 import static com.example.fc_plaza_service.domain.constants.RouterConst.RESTAURANT_BASE_PATH;
 import static com.example.fc_plaza_service.domain.constants.SwaggerConst.CREATE_DISH_OPERATION;
 import static com.example.fc_plaza_service.domain.constants.SwaggerConst.ENABLE_DISH_OPERATION;
+import static com.example.fc_plaza_service.domain.constants.SwaggerConst.GET_MENU_OPERATION;
 import static com.example.fc_plaza_service.domain.constants.SwaggerConst.UPDATE_DISH_OPERATION;
 import static com.example.fc_plaza_service.domain.enums.ServerResponses.DISH_CREATED_SUCCESSFULLY;
 import static com.example.fc_plaza_service.domain.enums.ServerResponses.DISH_UPDATED_SUCCESSFULLY;
@@ -25,20 +28,24 @@ import com.example.fc_plaza_service.domain.exceptions.StandardError;
 import com.example.fc_plaza_service.infrastructure.entrypoint.dto.request.DefaultServerResponse;
 import com.example.fc_plaza_service.infrastructure.entrypoint.dto.request.DishRequest;
 import com.example.fc_plaza_service.infrastructure.entrypoint.dto.request.DishUpdateRequest;
+import com.example.fc_plaza_service.infrastructure.entrypoint.dto.response.DishResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import jakarta.websocket.server.PathParam;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
@@ -101,5 +108,23 @@ public class DishController {
     dishApplicationService.updateStatusDish(restaurantId, dishId, status);
     return ResponseEntity.status(DISH_UPDATED_SUCCESSFULLY.getHttpStatus())
         .body(new DefaultServerResponse<>(DISH_UPDATED_SUCCESSFULLY.getMessage(), null));
+  }
+
+  @Operation(summary = GET_MENU_OPERATION)
+  @ApiResponses(
+      value = {
+        @ApiResponse(responseCode = OK, description = ""),
+        @ApiResponse(responseCode = SERVER_ERROR, description = SERVER_ERROR_MSG),
+      })
+  @GetMapping("/{restaurant_id}" + MENU_BASE_PATH)
+  @PreAuthorize("hasAuthority('client')")
+  public ResponseEntity<DefaultServerResponse<List<DishResponse>, StandardError>> getRestaurantMenu(
+      @PathVariable(name = "restaurant_id") Long restaurantId,
+      @RequestParam(value = "page", defaultValue = "0") Integer page,
+      @RequestParam(value = "size", defaultValue = "10") Integer size) {
+    return ResponseEntity.status(OK_INT)
+        .body(
+            new DefaultServerResponse<>(
+                dishApplicationService.getRestaurantMenu(restaurantId, page, size), null));
   }
 }

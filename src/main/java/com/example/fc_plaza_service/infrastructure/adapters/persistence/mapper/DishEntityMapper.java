@@ -1,7 +1,9 @@
 package com.example.fc_plaza_service.infrastructure.adapters.persistence.mapper;
 
 import com.example.fc_plaza_service.domain.model.Dish;
+import com.example.fc_plaza_service.domain.model.DishCategory;
 import com.example.fc_plaza_service.infrastructure.adapters.persistence.entity.DishEntity;
+import com.example.fc_plaza_service.infrastructure.adapters.persistence.entity.DishProjection;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
@@ -13,4 +15,6 @@ public interface DishEntityMapper {
   @Mapping(target = "restaurant", ignore = true)
   @Mapping(target = "category", ignore = true)
   DishEntity toEntity(Dish dish);
+
+  DishCategory toModel(DishProjection dishProjection);
 }

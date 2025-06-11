@@ -1,4 +1,4 @@
-package com.example.fc_plaza_service.infrastructure.entrypoint.dto;
+package com.example.fc_plaza_service.infrastructure.entrypoint.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

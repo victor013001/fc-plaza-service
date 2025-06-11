@@ -17,8 +17,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.example.fc_plaza_service.application.service.DishApplicationService;
 import com.example.fc_plaza_service.domain.enums.ProductStatus;
-import com.example.fc_plaza_service.infrastructure.entrypoint.dto.DishRequest;
-import com.example.fc_plaza_service.infrastructure.entrypoint.dto.DishUpdateRequest;
+import com.example.fc_plaza_service.infrastructure.entrypoint.dto.request.DishRequest;
+import com.example.fc_plaza_service.infrastructure.entrypoint.dto.request.DishUpdateRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.junit.jupiter.api.BeforeEach;

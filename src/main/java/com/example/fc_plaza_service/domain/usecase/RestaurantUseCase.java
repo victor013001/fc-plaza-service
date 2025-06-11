@@ -5,6 +5,7 @@ import com.example.fc_plaza_service.domain.api.UserServicePort;
 import com.example.fc_plaza_service.domain.exceptions.standard_exception.BadRequest;
 import com.example.fc_plaza_service.domain.model.Restaurant;
 import com.example.fc_plaza_service.domain.spi.RestaurantPersistencePort;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -19,6 +20,22 @@ public class RestaurantUseCase implements RestaurantServicePort {
     validPhone(restaurant.phone());
     validLandlordId(restaurant.userId());
     restaurantPersistencePort.saveRestaurant(restaurant);
+  }
+
+  @Override
+  public List<Restaurant> getRestaurants(Integer page, Integer size, String direction) {
+    validPageRequest(page, size, direction);
+    return restaurantPersistencePort.getRestaurants(page, size, direction);
+  }
+
+  private void validPageRequest(Integer page, Integer size, String direction) {
+    if (page <= 0 || size < 0 || !isValidDirection(direction)) {
+      throw new BadRequest();
+    }
+  }
+
+  private boolean isValidDirection(String direction) {
+    return "asc".equalsIgnoreCase(direction) || "desc".equalsIgnoreCase(direction);
   }
 
   private void validNIT(String nit) {

@@ -3,7 +3,7 @@ package com.example.fc_plaza_service.infrastructure.adapters.user_service;
 import com.example.fc_plaza_service.domain.api.UserServicePort;
 import com.example.fc_plaza_service.domain.exceptions.standard_exception.BadRequest;
 import com.example.fc_plaza_service.infrastructure.adapters.user_service.feign.UserFeignClient;
-import com.example.fc_plaza_service.infrastructure.entrypoint.dto.DefaultServerResponse;
+import com.example.fc_plaza_service.infrastructure.entrypoint.dto.request.DefaultServerResponse;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

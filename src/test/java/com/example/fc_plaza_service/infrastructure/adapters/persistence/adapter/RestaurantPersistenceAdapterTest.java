@@ -1,8 +1,10 @@
 package com.example.fc_plaza_service.infrastructure.adapters.persistence.adapter;
 
 import static com.example.fc_plaza_service.util.data.RestaurantData.getValidRestaurant;
+import static com.example.fc_plaza_service.util.data.RestaurantEntityData.getRestaurantEntitiesPage;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -16,6 +18,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.PageRequest;
 
 @ExtendWith(MockitoExtension.class)
 class RestaurantPersistenceAdapterTest {
@@ -82,5 +85,21 @@ class RestaurantPersistenceAdapterTest {
 
     assertEquals(expectedUserId, result);
     verify(restaurantRepository).findUserIdByRestaurantId(restaurantId);
+  }
+
+  @Test
+  void getRestaurants_ShouldReturnMappedRestaurants() {
+    int page = 0;
+    int size = 2;
+    var direction = "asc";
+
+    when(restaurantRepository.findAll(any(PageRequest.class)))
+        .thenReturn(getRestaurantEntitiesPage());
+
+    var result = restaurantPersistenceAdapter.getRestaurants(page, size, direction);
+
+    assertEquals(3, result.size());
+    verify(restaurantRepository).findAll(any(PageRequest.class));
+    verify(restaurantEntityMapper, times(3)).toModel(any(RestaurantEntity.class));
   }
 }

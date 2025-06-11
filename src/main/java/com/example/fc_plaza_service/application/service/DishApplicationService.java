@@ -1,8 +1,8 @@
 package com.example.fc_plaza_service.application.service;
 
 import com.example.fc_plaza_service.domain.enums.ProductStatus;
-import com.example.fc_plaza_service.infrastructure.entrypoint.dto.DishRequest;
-import com.example.fc_plaza_service.infrastructure.entrypoint.dto.DishUpdateRequest;
+import com.example.fc_plaza_service.infrastructure.entrypoint.dto.request.DishRequest;
+import com.example.fc_plaza_service.infrastructure.entrypoint.dto.request.DishUpdateRequest;
 
 public interface DishApplicationService {
   void createDish(Long restaurantId, DishRequest dishRequest);

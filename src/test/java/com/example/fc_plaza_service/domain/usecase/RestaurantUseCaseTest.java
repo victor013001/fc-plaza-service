@@ -1,5 +1,6 @@
 package com.example.fc_plaza_service.domain.usecase;
 
+import static com.example.fc_plaza_service.util.data.RestaurantData.getRestaurants;
 import static com.example.fc_plaza_service.util.data.RestaurantData.getValidRestaurant;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -88,5 +89,35 @@ class RestaurantUseCaseTest {
     verify(restaurantPersistencePort).existsByPhone(restaurant.phone());
     verify(restaurantPersistencePort, never()).saveRestaurant(any(Restaurant.class));
     verify(userServicePort).existsLandlordById(restaurant.userId());
+  }
+
+  @Test
+  void getRestaurants_success() {
+    int page = 1;
+    int size = 5;
+    String direction = "asc";
+    var restaurants = getRestaurants();
+
+    when(restaurantPersistencePort.getRestaurants(page, size, direction)).thenReturn(restaurants);
+
+    var result = restaurantUseCase.getRestaurants(page, size, direction);
+
+    assertEquals(restaurants, result);
+    verify(restaurantPersistencePort).getRestaurants(page, size, direction);
+  }
+
+  @Test
+  void getRestaurants_invalidPage() {
+    assertThrows(BadRequest.class, () -> restaurantUseCase.getRestaurants(0, 5, "asc"));
+  }
+
+  @Test
+  void getRestaurants_invalidSize() {
+    assertThrows(BadRequest.class, () -> restaurantUseCase.getRestaurants(1, -1, "asc"));
+  }
+
+  @Test
+  void getRestaurants_invalidDirection() {
+    assertThrows(BadRequest.class, () -> restaurantUseCase.getRestaurants(1, 5, "upward"));
   }
 }

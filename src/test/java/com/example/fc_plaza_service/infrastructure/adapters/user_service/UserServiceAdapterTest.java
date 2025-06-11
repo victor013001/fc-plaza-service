@@ -7,7 +7,7 @@ import static org.mockito.Mockito.when;
 
 import com.example.fc_plaza_service.domain.exceptions.standard_exception.BadRequest;
 import com.example.fc_plaza_service.infrastructure.adapters.user_service.feign.UserFeignClient;
-import com.example.fc_plaza_service.infrastructure.entrypoint.dto.DefaultServerResponse;
+import com.example.fc_plaza_service.infrastructure.entrypoint.dto.request.DefaultServerResponse;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

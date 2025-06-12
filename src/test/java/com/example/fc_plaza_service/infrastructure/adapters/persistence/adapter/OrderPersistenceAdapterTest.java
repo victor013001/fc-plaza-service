@@ -113,4 +113,37 @@ class OrderPersistenceAdapterTest {
             eq(chefId), eq(OrderStatus.PENDING), any(PageRequest.class));
     verify(orderEntityMapper).toModel(orderEntity);
   }
+
+  @Test
+  void orderBelongsToRestaurant_shouldDelegateToRepository() {
+    Long orderId = 1L;
+    Long restaurantId = 2L;
+    when(orderRepository.existsByIdAndRestaurantId(orderId, restaurantId)).thenReturn(true);
+
+    boolean result = orderPersistenceAdapter.orderBelongsToRestaurant(orderId, restaurantId);
+
+    assertTrue(result);
+    verify(orderRepository).existsByIdAndRestaurantId(orderId, restaurantId);
+  }
+
+  @Test
+  void setChefId_shouldCallRepositoryMethod() {
+    Long orderId = 1L;
+    Long chefId = 2L;
+
+    orderPersistenceAdapter.setChefId(orderId, chefId);
+
+    verify(orderRepository).assignChefAndSetInPreparation(orderId, chefId);
+  }
+
+  @Test
+  void orderInPending_shouldReturnTrueWhenOrderIsPending() {
+    Long orderId = 1L;
+    when(orderRepository.isOrderPending(orderId)).thenReturn(true);
+
+    boolean result = orderPersistenceAdapter.orderInPending(orderId);
+
+    assertTrue(result);
+    verify(orderRepository).isOrderPending(orderId);
+  }
 }

@@ -31,7 +31,17 @@ public class OrderApplicationServiceHandler implements OrderApplicationService {
         .toList();
   }
 
+  @Override
+  public void assignOrder(Long orderId) {
+    orderServicePort.assignOrderToChef(
+        orderId, getCurrentUserId(), getCurrentEmployeeRestaurantId());
+  }
+
   private Long getCurrentUserId() {
     return userServicePort.getCurrentUserId();
+  }
+
+  private Long getCurrentEmployeeRestaurantId() {
+    return userServicePort.getCurrentUserRestaurant();
   }
 }

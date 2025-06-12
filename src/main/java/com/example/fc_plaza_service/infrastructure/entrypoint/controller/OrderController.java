@@ -31,6 +31,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -80,5 +81,19 @@ public class OrderController {
         .body(
             new DefaultServerResponse<>(
                 orderApplicationService.getOrders(page, size, sortedBy), null));
+  }
+
+  @Operation(summary = GET_ORDERS_OPERATION)
+  @ApiResponses(
+      value = {
+        @ApiResponse(responseCode = OK, description = ""),
+        @ApiResponse(responseCode = SERVER_ERROR, description = SERVER_ERROR_MSG),
+      })
+  @PatchMapping(ORDER_BASE_PATH + "/{order_id}")
+  @PreAuthorize("hasAuthority('employee')")
+  public ResponseEntity<DefaultServerResponse<String, StandardError>> assignOrder(
+      @PathVariable(name = "order_id") Long orderId) {
+    orderApplicationService.assignOrder(orderId);
+    return ResponseEntity.status(OK_INT).body(new DefaultServerResponse<>("", null));
   }
 }

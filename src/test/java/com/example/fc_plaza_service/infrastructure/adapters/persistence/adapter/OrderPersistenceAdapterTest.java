@@ -100,7 +100,7 @@ class OrderPersistenceAdapterTest {
     var order = getValidOrder();
     Page<OrderEntity> orderPage = new PageImpl<>(List.of(orderEntity));
 
-    when(orderRepository.findAllByChefIdAndStatus(
+    when(orderRepository.findAllByRestaurantIdAndStatus(
             eq(chefId), eq(OrderStatus.PENDING), any(PageRequest.class)))
         .thenReturn(orderPage);
     when(orderEntityMapper.toModel(orderEntity)).thenReturn(order);
@@ -109,7 +109,8 @@ class OrderPersistenceAdapterTest {
 
     assertThat(result).hasSize(1).contains(order);
     verify(orderRepository)
-        .findAllByChefIdAndStatus(eq(chefId), eq(OrderStatus.PENDING), any(PageRequest.class));
+        .findAllByRestaurantIdAndStatus(
+            eq(chefId), eq(OrderStatus.PENDING), any(PageRequest.class));
     verify(orderEntityMapper).toModel(orderEntity);
   }
 }

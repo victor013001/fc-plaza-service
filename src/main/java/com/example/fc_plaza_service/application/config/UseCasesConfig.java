@@ -84,7 +84,8 @@ public class UseCasesConfig {
   }
 
   @Bean
-  public OrderServicePort orderServicePort(OrderPersistencePort orderPersistencePort) {
-    return new OrderUseCase(orderPersistencePort);
+  public OrderServicePort orderServicePort(
+      OrderPersistencePort orderPersistencePort, UserServicePort userServicePort) {
+    return new OrderUseCase(orderPersistencePort, userServicePort);
   }
 }

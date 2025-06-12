@@ -6,4 +6,6 @@ public interface UserServicePort {
   boolean doesLandlordBelongToEmail(Long userId);
 
   Long getCurrentUserId();
+
+  Long getCurrentUserRestaurant();
 }

@@ -8,4 +8,6 @@ public interface OrderApplicationService {
   void createOrder(Long restaurantId, OrderRequest orderRequest);
 
   List<OrderResponse> getOrders(Integer page, Integer size, String sortedBy);
+
+  void assignOrder(Long orderId);
 }

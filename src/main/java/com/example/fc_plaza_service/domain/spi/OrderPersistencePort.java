@@ -8,5 +8,11 @@ public interface OrderPersistencePort {
 
   boolean allOrdersInDelivered(Long clientId);
 
-  List<Order> getOrders(Integer page, Integer size, String sortedBy, Long currentUserId);
+  List<Order> getOrders(Integer page, Integer size, String sortedBy, Long restaurantId);
+
+  boolean orderBelongsToRestaurant(Long orderId, Long restaurantId);
+
+  void setChefId(Long orderId, Long currentUserId);
+
+  boolean orderInPending(Long orderId);
 }

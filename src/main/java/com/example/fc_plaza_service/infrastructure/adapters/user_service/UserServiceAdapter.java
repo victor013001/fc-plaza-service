@@ -40,4 +40,12 @@ public class UserServiceAdapter implements UserServicePort {
         .map(DefaultServerResponse::data)
         .orElseThrow(BadRequest::new);
   }
+
+  @Override
+  public Long getCurrentUserRestaurant() {
+    log.info("{} Getting current user restaurant", LOG_PREFIX);
+    return Optional.of(userFeignClient.getEmployeeRestaurant())
+        .map(DefaultServerResponse::data)
+        .orElseThrow(BadRequest::new);
+  }
 }

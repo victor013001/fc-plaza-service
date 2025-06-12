@@ -18,4 +18,7 @@ public interface UserFeignClient {
 
   @GetMapping("/api/v1/user")
   DefaultServerResponse<Long, StandardError> getCurrentUserId();
+
+  @GetMapping("/api/v1/user/employee/restaurant")
+  DefaultServerResponse<Long, StandardError> getEmployeeRestaurant();
 }

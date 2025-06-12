@@ -7,4 +7,6 @@ public interface OrderServicePort {
   void placeOrder(Order order);
 
   List<Order> getOrders(Integer page, Integer size, String sortedBy, Long currentUserId);
+
+  void assignOrderToChef(Long orderId, Long currentUserId, Long restaurantId);
 }

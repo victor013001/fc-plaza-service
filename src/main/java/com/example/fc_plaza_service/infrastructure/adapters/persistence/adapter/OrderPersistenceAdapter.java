@@ -59,18 +59,30 @@ public class OrderPersistenceAdapter implements OrderPersistencePort {
   }
 
   @Override
-  public List<Order> getOrders(Integer page, Integer size, String sortedBy, Long currentUserId) {
+  public List<Order> getOrders(Integer page, Integer size, String sortedBy, Long restaurantId) {
     log.info(
-        "{} Getting order in status: {} assign to employee: {}.",
-        LOG_PREFIX,
-        sortedBy,
-        currentUserId);
+        "{} Getting order in status: {} for restaurant: {}.", LOG_PREFIX, sortedBy, restaurantId);
     OrderStatus status = OrderStatus.valueOf(sortedBy);
     return orderRepository
-        .findAllByChefIdAndStatus(currentUserId, status, buildPageRequest(page, size))
+        .findAllByRestaurantIdAndStatus(restaurantId, status, buildPageRequest(page, size))
         .stream()
         .map(orderEntityMapper::toModel)
         .toList();
+  }
+
+  @Override
+  public boolean orderBelongsToRestaurant(Long orderId, Long restaurantId) {
+    return orderRepository.existsByIdAndRestaurantId(orderId, restaurantId);
+  }
+
+  @Override
+  public void setChefId(Long orderId, Long currentUserId) {
+    orderRepository.assignChefAndSetInPreparation(orderId, currentUserId);
+  }
+
+  @Override
+  public boolean orderInPending(Long orderId) {
+    return orderRepository.isOrderPending(orderId);
   }
 
   private PageRequest buildPageRequest(Integer page, Integer size) {

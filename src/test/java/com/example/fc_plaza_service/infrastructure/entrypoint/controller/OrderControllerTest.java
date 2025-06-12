@@ -9,6 +9,7 @@ import static com.example.fc_plaza_service.util.data.OrderResponseData.getValidO
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -97,5 +98,21 @@ class OrderControllerTest {
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.data").isArray())
         .andExpect(jsonPath("$.error").doesNotExist());
+  }
+
+  @Test
+  void assignOrder_Success() throws Exception {
+    Long orderId = 123L;
+
+    doNothing().when(orderApplicationService).assignOrder(orderId);
+
+    mockMvc
+        .perform(
+            MockMvcRequestBuilders.patch(RESTAURANT_BASE_PATH + ORDER_BASE_PATH + "/" + orderId))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.data").value(""))
+        .andExpect(jsonPath("$.error").doesNotExist());
+
+    verify(orderApplicationService).assignOrder(orderId);
   }
 }

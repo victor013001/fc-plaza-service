@@ -89,4 +89,26 @@ class UserServiceAdapterTest {
     assertThrows(BadRequest.class, () -> userServiceAdapter.getCurrentUserId());
     verify(userFeignClient).getCurrentUserId();
   }
+
+  @Test
+  void getCurrentUserRestaurant_ShouldReturnRestaurantId() {
+    Long expectedRestaurantId = 99L;
+
+    when(userFeignClient.getEmployeeRestaurant())
+        .thenReturn(new DefaultServerResponse<>(expectedRestaurantId, null));
+
+    Long result = userServiceAdapter.getCurrentUserRestaurant();
+
+    assertEquals(expectedRestaurantId, result);
+    verify(userFeignClient).getEmployeeRestaurant();
+  }
+
+  @Test
+  void getCurrentUserRestaurant_ShouldThrowBadRequest() {
+    when(userFeignClient.getEmployeeRestaurant())
+        .thenReturn(new DefaultServerResponse<>(null, null));
+
+    assertThrows(BadRequest.class, () -> userServiceAdapter.getCurrentUserRestaurant());
+    verify(userFeignClient).getEmployeeRestaurant();
+  }
 }

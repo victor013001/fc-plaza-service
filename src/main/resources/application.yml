@@ -3,6 +3,9 @@ spring:
     name: FC Plaza Service
   profiles:
     active: ${ACTIVE_PROFILE:none}
+  logging:
+    level:
+      root: debug
 
 server:
   port: 8081

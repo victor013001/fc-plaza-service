@@ -64,4 +64,20 @@ class OrderApplicationServiceHandlerTest {
     verify(orderServicePort).getOrders(page, size, sortedBy, currentUserId);
     verify(orderMapper).toResponse(order);
   }
+
+  @Test
+  void assignOrder_shouldAssignOrderToChef() {
+    Long orderId = 10L;
+    Long chefId = 99L;
+    Long restaurantId = 123L;
+
+    when(userServicePort.getCurrentUserId()).thenReturn(chefId);
+    when(userServicePort.getCurrentUserRestaurant()).thenReturn(restaurantId);
+
+    orderApplicationServiceHandler.assignOrder(orderId);
+
+    verify(userServicePort).getCurrentUserId();
+    verify(userServicePort).getCurrentUserRestaurant();
+    verify(orderServicePort).assignOrderToChef(orderId, chefId, restaurantId);
+  }
 }

@@ -1,5 +1,6 @@
 package com.example.fc_plaza_service.infrastructure.adapters.persistence.adapter;
 
+import com.example.fc_plaza_service.domain.enums.OrderStatus;
 import com.example.fc_plaza_service.domain.model.Order;
 import com.example.fc_plaza_service.domain.spi.OrderPersistencePort;
 import com.example.fc_plaza_service.infrastructure.adapters.persistence.entity.DishEntity;
@@ -12,8 +13,11 @@ import com.example.fc_plaza_service.infrastructure.adapters.persistence.reposito
 import com.example.fc_plaza_service.infrastructure.adapters.persistence.repository.OrderDishRepository;
 import com.example.fc_plaza_service.infrastructure.adapters.persistence.repository.OrderRepository;
 import com.example.fc_plaza_service.infrastructure.adapters.persistence.repository.RestaurantRepository;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
@@ -45,5 +49,31 @@ public class OrderPersistenceAdapter implements OrderPersistencePort {
                   orderDishEntityMapper.toEntity(orderEntity, dish, orderDish.quantity());
               orderDishRepository.save(orderDishEntity);
             });
+  }
+
+  @Override
+  @Transactional(readOnly = true)
+  public boolean allOrdersInDelivered(Long clientId) {
+    log.info("{} Checking if all orders are delivered for client id: {}.", LOG_PREFIX, clientId);
+    return orderRepository.noOrdersWithStatusDifferentFromDelivered(clientId);
+  }
+
+  @Override
+  public List<Order> getOrders(Integer page, Integer size, String sortedBy, Long currentUserId) {
+    log.info(
+        "{} Getting order in status: {} assign to employee: {}.",
+        LOG_PREFIX,
+        sortedBy,
+        currentUserId);
+    OrderStatus status = OrderStatus.valueOf(sortedBy);
+    return orderRepository
+        .findAllByChefIdAndStatus(currentUserId, status, buildPageRequest(page, size))
+        .stream()
+        .map(orderEntityMapper::toModel)
+        .toList();
+  }
+
+  private PageRequest buildPageRequest(Integer page, Integer size) {
+    return PageRequest.of(page, size, Sort.by("date").descending());
   }
 }

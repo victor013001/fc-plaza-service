@@ -11,4 +11,5 @@ public class SwaggerConst {
   public static final String GET_RESTAURANTS_OPERATION = "Get restaurants.";
   public static final String GET_MENU_OPERATION = "Get restaurant menu.";
   public static final String CREATE_ORDER_OPERATION = "Create order";
+  public static final String GET_ORDERS_OPERATION = "Get orders.";
 }

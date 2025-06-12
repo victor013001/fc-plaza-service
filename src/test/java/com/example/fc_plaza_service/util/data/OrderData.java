@@ -12,10 +12,10 @@ public class OrderData {
   }
 
   public static Order getValidOrder() {
-    return new Order(1L, LocalDate.now(), OrderStatus.PENDING, 1L, 1L, List.of(getOrderDish()));
+    return new Order(1L, 1L, LocalDate.now(), OrderStatus.PENDING, 1L, 1L, List.of(getOrderDish()));
   }
 
   public static OrderDish getOrderDish() {
-    return new OrderDish(1L, 2);
+    return new OrderDish(1L, "Dish", 2);
   }
 }

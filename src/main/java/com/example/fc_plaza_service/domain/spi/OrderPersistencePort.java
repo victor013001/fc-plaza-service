@@ -1,5 +1,6 @@
 package com.example.fc_plaza_service.domain.spi;
 
+import com.example.fc_plaza_service.domain.enums.OrderStatus;
 import com.example.fc_plaza_service.domain.model.Order;
 import java.util.List;
 
@@ -15,4 +16,10 @@ public interface OrderPersistencePort {
   void setChefId(Long orderId, Long currentUserId);
 
   boolean orderInPending(Long orderId);
+
+  boolean isOrderChef(Long orderId, Long currentUserId);
+
+  void changeStatus(Long orderId, OrderStatus status);
+
+  OrderStatus getOrderStatus(Long orderId);
 }

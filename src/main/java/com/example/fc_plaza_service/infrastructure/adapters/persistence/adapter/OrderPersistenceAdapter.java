@@ -85,6 +85,19 @@ public class OrderPersistenceAdapter implements OrderPersistencePort {
     return orderRepository.isOrderPending(orderId);
   }
 
+  @Override
+  public boolean isOrderChef(Long orderId, Long currentUserId) {
+    return orderRepository.existsByIdAndChefId(orderId, currentUserId);
+  }
+
+  @Override
+  public void changeStatus(Long orderId, OrderStatus status) {}
+
+  @Override
+  public OrderStatus getOrderStatus(Long orderId) {
+    return orderRepository.getStatusById(orderId);
+  }
+
   private PageRequest buildPageRequest(Integer page, Integer size) {
     return PageRequest.of(page, size, Sort.by("date").descending());
   }

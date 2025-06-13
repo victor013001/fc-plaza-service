@@ -17,6 +17,7 @@ import static com.example.fc_plaza_service.domain.constants.SwaggerConst.GET_ORD
 import static com.example.fc_plaza_service.domain.enums.ServerResponses.ORDER_CREATED_SUCCESSFULLY;
 
 import com.example.fc_plaza_service.application.service.OrderApplicationService;
+import com.example.fc_plaza_service.domain.enums.OrderStatus;
 import com.example.fc_plaza_service.domain.exceptions.StandardError;
 import com.example.fc_plaza_service.infrastructure.entrypoint.dto.request.DefaultServerResponse;
 import com.example.fc_plaza_service.infrastructure.entrypoint.dto.request.OrderRequest;
@@ -91,9 +92,10 @@ public class OrderController {
       })
   @PatchMapping(ORDER_BASE_PATH + "/{order_id}")
   @PreAuthorize("hasAuthority('employee')")
-  public ResponseEntity<DefaultServerResponse<String, StandardError>> assignOrder(
-      @PathVariable(name = "order_id") Long orderId) {
-    orderApplicationService.assignOrder(orderId);
+  public ResponseEntity<DefaultServerResponse<String, StandardError>> updateOrder(
+      @PathVariable(name = "order_id") Long orderId,
+      @RequestParam(value = "status", defaultValue = "IN_PREPARATION") OrderStatus status) {
+    orderApplicationService.updateOrder(orderId, status);
     return ResponseEntity.status(OK_INT).body(new DefaultServerResponse<>("", null));
   }
 }

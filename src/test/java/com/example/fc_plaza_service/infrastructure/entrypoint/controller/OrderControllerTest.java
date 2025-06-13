@@ -15,6 +15,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.example.fc_plaza_service.application.service.OrderApplicationService;
+import com.example.fc_plaza_service.domain.enums.OrderStatus;
 import com.example.fc_plaza_service.infrastructure.entrypoint.dto.request.OrderRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -101,10 +102,10 @@ class OrderControllerTest {
   }
 
   @Test
-  void assignOrder_Success() throws Exception {
+  void updateOrder_Success() throws Exception {
     Long orderId = 123L;
 
-    doNothing().when(orderApplicationService).assignOrder(orderId);
+    doNothing().when(orderApplicationService).updateOrder(orderId, any(OrderStatus.class));
 
     mockMvc
         .perform(
@@ -113,6 +114,6 @@ class OrderControllerTest {
         .andExpect(jsonPath("$.data").value(""))
         .andExpect(jsonPath("$.error").doesNotExist());
 
-    verify(orderApplicationService).assignOrder(orderId);
+    verify(orderApplicationService).updateOrder(orderId, any(OrderStatus.class));
   }
 }

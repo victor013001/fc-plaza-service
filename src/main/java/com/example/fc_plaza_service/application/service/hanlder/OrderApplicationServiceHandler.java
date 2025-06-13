@@ -3,6 +3,7 @@ package com.example.fc_plaza_service.application.service.hanlder;
 import com.example.fc_plaza_service.application.mapper.OrderMapper;
 import com.example.fc_plaza_service.application.service.OrderApplicationService;
 import com.example.fc_plaza_service.domain.api.OrderServicePort;
+import com.example.fc_plaza_service.domain.enums.OrderStatus;
 import com.example.fc_plaza_service.domain.spi.UserServicePort;
 import com.example.fc_plaza_service.infrastructure.entrypoint.dto.request.OrderRequest;
 import com.example.fc_plaza_service.infrastructure.entrypoint.dto.response.OrderResponse;
@@ -32,9 +33,12 @@ public class OrderApplicationServiceHandler implements OrderApplicationService {
   }
 
   @Override
-  public void assignOrder(Long orderId) {
-    orderServicePort.assignOrderToChef(
-        orderId, getCurrentUserId(), getCurrentEmployeeRestaurantId());
+  public void updateOrder(Long orderId, OrderStatus status) {
+    if (OrderStatus.IN_PREPARATION.equals(status)) {
+      orderServicePort.assignOrderToChef(
+          orderId, getCurrentUserId(), getCurrentEmployeeRestaurantId());
+    }
+    orderServicePort.changeStatus(orderId, status, getCurrentUserId());
   }
 
   private Long getCurrentUserId() {

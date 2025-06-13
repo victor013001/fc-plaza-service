@@ -33,4 +33,8 @@ public interface OrderRepository extends JpaRepository<OrderEntity, Long> {
 
   @Query("SELECT COUNT(o) > 0 FROM OrderEntity o WHERE o.id = :orderId AND o.status = 'PENDING'")
   boolean isOrderPending(@Param("orderId") Long orderId);
+
+  boolean existsByIdAndChefId(Long orderId, Long chefId);
+
+  OrderStatus getStatusById(Long orderId);
 }

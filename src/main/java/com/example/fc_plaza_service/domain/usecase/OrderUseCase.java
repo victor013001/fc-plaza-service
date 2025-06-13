@@ -1,6 +1,7 @@
 package com.example.fc_plaza_service.domain.usecase;
 
 import com.example.fc_plaza_service.domain.api.OrderServicePort;
+import com.example.fc_plaza_service.domain.enums.OrderStatus;
 import com.example.fc_plaza_service.domain.exceptions.standard_exception.BadRequest;
 import com.example.fc_plaza_service.domain.model.Order;
 import com.example.fc_plaza_service.domain.spi.OrderPersistencePort;
@@ -31,6 +32,27 @@ public class OrderUseCase implements OrderServicePort {
     validEmployeeRestaurantId(orderId, restaurantId);
     validOrder(orderId);
     orderPersistencePort.setChefId(orderId, currentUserId);
+  }
+
+  @Override
+  public void changeStatus(Long orderId, OrderStatus status, Long currentUserId) {
+    validOrderChef(orderId, currentUserId);
+    validOrderStatus(orderId, status);
+    orderPersistencePort.changeStatus(orderId, status);
+  }
+
+  private void validOrderStatus(Long orderId, OrderStatus status) {
+    OrderStatus currentOrderStatus = orderPersistencePort.getOrderStatus(orderId);
+    if (OrderStatus.IN_PREPARATION.equals(currentOrderStatus)
+        && OrderStatus.DELIVERED.equals(status)) {
+      throw new BadRequest();
+    }
+  }
+
+  private void validOrderChef(Long orderId, Long currentUserId) {
+    if (!orderPersistencePort.isOrderChef(orderId, currentUserId)) {
+      throw new BadRequest();
+    }
   }
 
   private void validOrder(Long orderId) {

@@ -1,8 +1,10 @@
 package com.example.fc_plaza_service.domain.usecase;
 
 import com.example.fc_plaza_service.domain.api.OrderServicePort;
+import com.example.fc_plaza_service.domain.enums.OrderStatus;
 import com.example.fc_plaza_service.domain.exceptions.standard_exception.BadRequest;
 import com.example.fc_plaza_service.domain.model.Order;
+import com.example.fc_plaza_service.domain.spi.MsgServicePort;
 import com.example.fc_plaza_service.domain.spi.OrderPersistencePort;
 import com.example.fc_plaza_service.domain.spi.UserServicePort;
 import java.util.List;
@@ -13,6 +15,7 @@ public class OrderUseCase implements OrderServicePort {
 
   private final OrderPersistencePort orderPersistencePort;
   private final UserServicePort userServicePort;
+  private final MsgServicePort msgServicePort;
 
   @Override
   public void placeOrder(Order order) {
@@ -31,6 +34,32 @@ public class OrderUseCase implements OrderServicePort {
     validEmployeeRestaurantId(orderId, restaurantId);
     validOrder(orderId);
     orderPersistencePort.setChefId(orderId, currentUserId);
+  }
+
+  @Override
+  public void changeStatus(Long orderId, OrderStatus status, Long currentUserId) {
+    validOrderChef(orderId, currentUserId);
+    validOrderStatus(orderId, status);
+    orderPersistencePort.changeStatus(orderId, status);
+    sendOrderPin(orderId);
+  }
+
+  private void sendOrderPin(Long orderId) {
+    msgServicePort.sendMessage(orderId, orderPersistencePort.getOrderUser(orderId));
+  }
+
+  private void validOrderStatus(Long orderId, OrderStatus status) {
+    OrderStatus currentOrderStatus = orderPersistencePort.getOrderStatus(orderId);
+    if (OrderStatus.IN_PREPARATION.equals(currentOrderStatus)
+        && OrderStatus.DELIVERED.equals(status)) {
+      throw new BadRequest();
+    }
+  }
+
+  private void validOrderChef(Long orderId, Long currentUserId) {
+    if (!orderPersistencePort.isOrderChef(orderId, currentUserId)) {
+      throw new BadRequest();
+    }
   }
 
   private void validOrder(Long orderId) {

@@ -5,6 +5,7 @@ import static com.example.fc_plaza_service.util.data.OrderData.getValidOrder;
 import static com.example.fc_plaza_service.util.data.OrderEntityData.getOrderEntity;
 import static com.example.fc_plaza_service.util.data.RestaurantEntityData.getRestaurantEntity;
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
@@ -145,5 +146,15 @@ class OrderPersistenceAdapterTest {
 
     assertTrue(result);
     verify(orderRepository).isOrderPending(orderId);
+  }
+
+  @Test
+  void getOrderClientId() {
+    Long orderId = 1L;
+    Long userId = 1L;
+    when(orderRepository.getClientIdById(orderId)).thenReturn(userId);
+    var clientId = orderPersistenceAdapter.getOrderUser(orderId);
+    assertEquals(userId, clientId);
+    verify(orderRepository).getClientIdById(orderId);
   }
 }

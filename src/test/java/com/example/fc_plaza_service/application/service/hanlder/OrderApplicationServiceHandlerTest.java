@@ -9,6 +9,7 @@ import static org.mockito.Mockito.when;
 import com.example.fc_plaza_service.application.mapper.OrderMapper;
 import com.example.fc_plaza_service.application.mapper.OrderMapperImpl;
 import com.example.fc_plaza_service.domain.api.OrderServicePort;
+import com.example.fc_plaza_service.domain.enums.OrderStatus;
 import com.example.fc_plaza_service.domain.model.Order;
 import com.example.fc_plaza_service.domain.spi.UserServicePort;
 import java.util.List;
@@ -66,15 +67,16 @@ class OrderApplicationServiceHandlerTest {
   }
 
   @Test
-  void assignOrder_shouldAssignOrderToChef() {
+  void assignOrder_shouldUpdateOrderToChef() {
     Long orderId = 10L;
     Long chefId = 99L;
     Long restaurantId = 123L;
+    OrderStatus status = OrderStatus.IN_PREPARATION;
 
     when(userServicePort.getCurrentUserId()).thenReturn(chefId);
     when(userServicePort.getCurrentUserRestaurant()).thenReturn(restaurantId);
 
-    orderApplicationServiceHandler.assignOrder(orderId);
+    orderApplicationServiceHandler.updateOrder(orderId, status);
 
     verify(userServicePort).getCurrentUserId();
     verify(userServicePort).getCurrentUserRestaurant();

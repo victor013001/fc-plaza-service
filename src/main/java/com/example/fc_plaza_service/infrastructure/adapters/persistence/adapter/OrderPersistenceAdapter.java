@@ -103,6 +103,11 @@ public class OrderPersistenceAdapter implements OrderPersistencePort {
     return orderRepository.getClientIdById(orderId);
   }
 
+  @Override
+  public boolean isOrderClient(Long orderId, Long currentUserId) {
+    return orderRepository.existsByIdAndClientId(orderId, currentUserId);
+  }
+
   private PageRequest buildPageRequest(Integer page, Integer size) {
     return PageRequest.of(page, size, Sort.by("date").descending());
   }

@@ -42,6 +42,11 @@ public class OrderApplicationServiceHandler implements OrderApplicationService {
     }
   }
 
+  @Override
+  public void cancelOrder(Long orderId) {
+    orderServicePort.cancelOrder(orderId, getCurrentUserId());
+  }
+
   private Long getCurrentUserId() {
     return userServicePort.getCurrentUserId();
   }

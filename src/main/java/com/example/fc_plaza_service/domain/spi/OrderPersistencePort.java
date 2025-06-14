@@ -24,4 +24,6 @@ public interface OrderPersistencePort {
   OrderStatus getOrderStatus(Long orderId);
 
   Long getOrderUser(Long orderId);
+
+  boolean isOrderClient(Long orderId, Long currentUserId);
 }

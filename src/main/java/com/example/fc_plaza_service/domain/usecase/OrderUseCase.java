@@ -45,20 +45,39 @@ public class OrderUseCase implements OrderServicePort {
     if (OrderStatus.READY.equals(status)) sendOrderPin(orderId);
   }
 
+  @Override
+  public void cancelOrder(Long orderId, Long currentUserId) {
+    validOrderClient(orderId, currentUserId);
+    validOrderStatusAndPin(orderId, OrderStatus.CANCELED, null);
+    orderPersistencePort.changeStatus(orderId, OrderStatus.CANCELED);
+  }
+
+  private void validOrderClient(Long orderId, Long currentUserId) {
+    if (!orderPersistencePort.isOrderClient(orderId, currentUserId)) {
+      throw new BadRequest();
+    }
+  }
+
   private void sendOrderPin(Long orderId) {
     msgServicePort.sendMessage(orderId, orderPersistencePort.getOrderUser(orderId));
   }
 
   private void validOrderStatusAndPin(Long orderId, OrderStatus status, Integer pin) {
     OrderStatus currentOrderStatus = orderPersistencePort.getOrderStatus(orderId);
-    if (OrderStatus.IN_PREPARATION.equals(currentOrderStatus)
-        && OrderStatus.DELIVERED.equals(status)) {
-      throw new BadRequest();
-    }
     if (Objects.nonNull(pin)
         && OrderStatus.READY.equals(currentOrderStatus)
         && OrderStatus.DELIVERED.equals(status)) {
       validPin(orderId, pin);
+    }
+    if (OrderStatus.CANCELED.equals(status)
+        && (OrderStatus.READY.equals(currentOrderStatus)
+            || OrderStatus.DELIVERED.equals(currentOrderStatus)
+            || OrderStatus.CANCELED.equals(currentOrderStatus))) {
+      throw new BadRequest();
+    }
+    if (OrderStatus.IN_PREPARATION.equals(currentOrderStatus)
+        && OrderStatus.DELIVERED.equals(status)) {
+      throw new BadRequest();
     }
   }
 

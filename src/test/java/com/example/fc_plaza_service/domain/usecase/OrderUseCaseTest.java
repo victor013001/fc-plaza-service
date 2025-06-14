@@ -158,7 +158,6 @@ class OrderUseCaseTest {
     Long orderId = 1L;
     Long chefId = 2L;
     OrderStatus orderStatus = OrderStatus.DELIVERED;
-    Long userId = 1L;
     Integer pin = 1234;
 
     when(orderPersistencePort.isOrderChef(orderId, chefId)).thenReturn(true);
@@ -171,5 +170,21 @@ class OrderUseCaseTest {
     verify(orderPersistencePort).getOrderStatus(orderId);
     verify(orderPersistencePort).changeStatus(orderId, orderStatus);
     verify(msgServicePort).isValidPin(orderId, pin);
+  }
+
+  @Test
+  void cancelOrder() {
+    Long orderId = 1L;
+    Long userId = 2L;
+    OrderStatus orderStatus = OrderStatus.CANCELED;
+
+    when(orderPersistencePort.isOrderClient(orderId, userId)).thenReturn(true);
+    when(orderPersistencePort.getOrderStatus(orderId)).thenReturn(OrderStatus.PENDING);
+
+    orderUseCase.cancelOrder(orderId, userId);
+
+    verify(orderPersistencePort).isOrderClient(orderId, userId);
+    verify(orderPersistencePort).getOrderStatus(orderId);
+    verify(orderPersistencePort).changeStatus(orderId, orderStatus);
   }
 }

@@ -157,4 +157,14 @@ class OrderPersistenceAdapterTest {
     assertEquals(userId, clientId);
     verify(orderRepository).getClientIdById(orderId);
   }
+
+  @Test
+  void isOrderClient() {
+    Long orderId = 1L;
+    Long userId = 1L;
+    when(orderRepository.existsByIdAndClientId(orderId, userId)).thenReturn(true);
+    var exists = orderPersistenceAdapter.isOrderClient(orderId, userId);
+    assertTrue(exists);
+    verify(orderRepository).existsByIdAndClientId(orderId, userId);
+  }
 }

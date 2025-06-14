@@ -139,4 +139,20 @@ class OrderControllerTest {
 
     verify(orderApplicationService).updateOrder(anyLong(), any(OrderStatus.class), anyInt());
   }
+
+  @Test
+  void cancelOrder_Success() throws Exception {
+    Long orderId = 123L;
+
+    doNothing().when(orderApplicationService).cancelOrder(orderId);
+
+    mockMvc
+        .perform(
+            MockMvcRequestBuilders.delete(RESTAURANT_BASE_PATH + ORDER_BASE_PATH + "/" + orderId))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.data").value(""))
+        .andExpect(jsonPath("$.error").doesNotExist());
+
+    verify(orderApplicationService).cancelOrder(orderId);
+  }
 }

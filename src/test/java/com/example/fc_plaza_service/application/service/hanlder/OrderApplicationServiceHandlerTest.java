@@ -87,7 +87,6 @@ class OrderApplicationServiceHandlerTest {
   void updateOrderToReady() {
     Long orderId = 10L;
     Long chefId = 99L;
-    Long restaurantId = 123L;
     OrderStatus status = OrderStatus.DELIVERED;
     Integer pin = 1234;
 
@@ -97,5 +96,18 @@ class OrderApplicationServiceHandlerTest {
 
     verify(userServicePort).getCurrentUserId();
     verify(orderServicePort).changeStatus(orderId, status, chefId, pin);
+  }
+
+  @Test
+  void cancelOrder() {
+    Long orderId = 1L;
+    Long userId = 2L;
+
+    when(userServicePort.getCurrentUserId()).thenReturn(userId);
+
+    orderApplicationServiceHandler.cancelOrder(orderId);
+
+    verify(userServicePort).getCurrentUserId();
+    verify(orderServicePort).cancelOrder(orderId, userId);
   }
 }

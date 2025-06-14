@@ -12,8 +12,10 @@ import static com.example.fc_plaza_service.domain.constants.MsgConst.ORDER_CREAT
 import static com.example.fc_plaza_service.domain.constants.MsgConst.SERVER_ERROR_MSG;
 import static com.example.fc_plaza_service.domain.constants.RouterConst.ORDER_BASE_PATH;
 import static com.example.fc_plaza_service.domain.constants.RouterConst.RESTAURANT_BASE_PATH;
+import static com.example.fc_plaza_service.domain.constants.SwaggerConst.CANCEL_ORDER_OPERATION;
 import static com.example.fc_plaza_service.domain.constants.SwaggerConst.CREATE_ORDER_OPERATION;
 import static com.example.fc_plaza_service.domain.constants.SwaggerConst.GET_ORDERS_OPERATION;
+import static com.example.fc_plaza_service.domain.constants.SwaggerConst.UPDATE_ORDER_OPERATION;
 import static com.example.fc_plaza_service.domain.enums.ServerResponses.ORDER_CREATED_SUCCESSFULLY;
 
 import com.example.fc_plaza_service.application.service.OrderApplicationService;
@@ -31,6 +33,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -84,7 +87,7 @@ public class OrderController {
                 orderApplicationService.getOrders(page, size, sortedBy), null));
   }
 
-  @Operation(summary = GET_ORDERS_OPERATION)
+  @Operation(summary = UPDATE_ORDER_OPERATION)
   @ApiResponses(
       value = {
         @ApiResponse(responseCode = OK, description = ""),
@@ -97,6 +100,20 @@ public class OrderController {
       @RequestParam(value = "status", defaultValue = "IN_PREPARATION") OrderStatus status,
       @RequestBody(required = false) Integer pin) {
     orderApplicationService.updateOrder(orderId, status, pin);
+    return ResponseEntity.status(OK_INT).body(new DefaultServerResponse<>("", null));
+  }
+
+  @Operation(summary = CANCEL_ORDER_OPERATION)
+  @ApiResponses(
+      value = {
+        @ApiResponse(responseCode = OK, description = ""),
+        @ApiResponse(responseCode = SERVER_ERROR, description = SERVER_ERROR_MSG),
+      })
+  @DeleteMapping(ORDER_BASE_PATH + "/{order_id}")
+  @PreAuthorize("hasAuthority('client')")
+  public ResponseEntity<DefaultServerResponse<String, StandardError>> cancelOrder(
+      @PathVariable(name = "order_id") Long orderId) {
+    orderApplicationService.cancelOrder(orderId);
     return ResponseEntity.status(OK_INT).body(new DefaultServerResponse<>("", null));
   }
 }

@@ -98,6 +98,11 @@ public class OrderPersistenceAdapter implements OrderPersistencePort {
     return orderRepository.getStatusById(orderId);
   }
 
+  @Override
+  public Long getOrderUser(Long orderId) {
+    return orderRepository.getClientIdById(orderId);
+  }
+
   private PageRequest buildPageRequest(Integer page, Integer size) {
     return PageRequest.of(page, size, Sort.by("date").descending());
   }

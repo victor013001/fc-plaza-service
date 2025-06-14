@@ -22,4 +22,6 @@ public interface OrderPersistencePort {
   void changeStatus(Long orderId, OrderStatus status);
 
   OrderStatus getOrderStatus(Long orderId);
+
+  Long getOrderUser(Long orderId);
 }

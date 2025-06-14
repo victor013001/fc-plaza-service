@@ -37,8 +37,9 @@ public class OrderApplicationServiceHandler implements OrderApplicationService {
     if (OrderStatus.IN_PREPARATION.equals(status)) {
       orderServicePort.assignOrderToChef(
           orderId, getCurrentUserId(), getCurrentEmployeeRestaurantId());
+    } else {
+      orderServicePort.changeStatus(orderId, status, getCurrentUserId());
     }
-    orderServicePort.changeStatus(orderId, status, getCurrentUserId());
   }
 
   private Long getCurrentUserId() {

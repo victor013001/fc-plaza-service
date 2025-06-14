@@ -7,12 +7,16 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
+import com.example.fc_plaza_service.domain.enums.OrderStatus;
 import com.example.fc_plaza_service.domain.exceptions.standard_exception.BadRequest;
 import com.example.fc_plaza_service.domain.model.Order;
+import com.example.fc_plaza_service.domain.spi.MsgServicePort;
 import com.example.fc_plaza_service.domain.spi.OrderPersistencePort;
 import com.example.fc_plaza_service.domain.spi.UserServicePort;
 import java.util.List;
@@ -30,6 +34,8 @@ class OrderUseCaseTest {
   @Mock private OrderPersistencePort orderPersistencePort;
 
   @Mock private UserServicePort userServicePort;
+
+  @Mock private MsgServicePort msgServicePort;
 
   @Test
   void placeOrder_shouldCallPersistence() {
@@ -105,6 +111,7 @@ class OrderUseCaseTest {
     verify(orderPersistencePort).orderBelongsToRestaurant(orderId, restaurantId);
     verify(orderPersistencePort, never()).orderInPending(any());
     verify(orderPersistencePort, never()).setChefId(any(), any());
+    verifyNoInteractions(msgServicePort);
   }
 
   @Test
@@ -122,5 +129,27 @@ class OrderUseCaseTest {
     verify(orderPersistencePort).orderBelongsToRestaurant(orderId, restaurantId);
     verify(orderPersistencePort).orderInPending(orderId);
     verify(orderPersistencePort, never()).setChefId(any(), any());
+    verifyNoInteractions(msgServicePort);
+  }
+
+  @Test
+  void changeStatus_ShouldSendPinCode() {
+    Long orderId = 1L;
+    Long chefId = 2L;
+    OrderStatus orderStatus = OrderStatus.READY;
+    Long userId = 1L;
+
+    when(orderPersistencePort.isOrderChef(orderId, chefId)).thenReturn(true);
+    when(orderPersistencePort.getOrderStatus(orderId)).thenReturn(OrderStatus.IN_PREPARATION);
+    when(orderPersistencePort.getOrderUser(orderId)).thenReturn(userId);
+    doNothing().when(msgServicePort).sendMessage(anyLong(), anyLong());
+
+    orderUseCase.changeStatus(orderId, orderStatus, chefId);
+
+    verify(orderPersistencePort).isOrderChef(orderId, chefId);
+    verify(orderPersistencePort).getOrderStatus(orderId);
+    verify(orderPersistencePort).changeStatus(orderId, orderStatus);
+    verify(orderPersistencePort).getOrderUser(orderId);
+    verify(msgServicePort).sendMessage(orderId, userId);
   }
 }

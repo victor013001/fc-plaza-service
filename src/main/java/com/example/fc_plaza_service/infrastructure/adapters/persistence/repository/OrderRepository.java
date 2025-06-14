@@ -37,4 +37,6 @@ public interface OrderRepository extends JpaRepository<OrderEntity, Long> {
   boolean existsByIdAndChefId(Long orderId, Long chefId);
 
   OrderStatus getStatusById(Long orderId);
+
+  Long getClientIdById(Long orderId);
 }

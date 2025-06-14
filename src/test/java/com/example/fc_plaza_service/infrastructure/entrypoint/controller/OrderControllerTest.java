@@ -7,6 +7,7 @@ import static com.example.fc_plaza_service.util.data.OrderRequestData.getInvalid
 import static com.example.fc_plaza_service.util.data.OrderRequestData.getValidOrderRequest;
 import static com.example.fc_plaza_service.util.data.OrderResponseData.getValidOrderResponse;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
@@ -105,7 +106,7 @@ class OrderControllerTest {
   void updateOrder_Success() throws Exception {
     Long orderId = 123L;
 
-    doNothing().when(orderApplicationService).updateOrder(orderId, any(OrderStatus.class));
+    doNothing().when(orderApplicationService).updateOrder(anyLong(), any(OrderStatus.class));
 
     mockMvc
         .perform(
@@ -114,6 +115,6 @@ class OrderControllerTest {
         .andExpect(jsonPath("$.data").value(""))
         .andExpect(jsonPath("$.error").doesNotExist());
 
-    verify(orderApplicationService).updateOrder(orderId, any(OrderStatus.class));
+    verify(orderApplicationService).updateOrder(anyLong(), any(OrderStatus.class));
   }
 }

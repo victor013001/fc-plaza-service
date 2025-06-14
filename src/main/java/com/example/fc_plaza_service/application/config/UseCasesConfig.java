@@ -4,12 +4,15 @@ import com.example.fc_plaza_service.domain.api.DishServicePort;
 import com.example.fc_plaza_service.domain.api.OrderServicePort;
 import com.example.fc_plaza_service.domain.api.RestaurantServicePort;
 import com.example.fc_plaza_service.domain.spi.DishPersistencePort;
+import com.example.fc_plaza_service.domain.spi.MsgServicePort;
 import com.example.fc_plaza_service.domain.spi.OrderPersistencePort;
 import com.example.fc_plaza_service.domain.spi.RestaurantPersistencePort;
 import com.example.fc_plaza_service.domain.spi.UserServicePort;
 import com.example.fc_plaza_service.domain.usecase.DishUseCase;
 import com.example.fc_plaza_service.domain.usecase.OrderUseCase;
 import com.example.fc_plaza_service.domain.usecase.RestaurantUseCase;
+import com.example.fc_plaza_service.infrastructure.adapters.msg_service.MsgServiceAdapter;
+import com.example.fc_plaza_service.infrastructure.adapters.msg_service.feign.MsgFeignClient;
 import com.example.fc_plaza_service.infrastructure.adapters.persistence.adapter.DishPersistenceAdapter;
 import com.example.fc_plaza_service.infrastructure.adapters.persistence.adapter.OrderPersistenceAdapter;
 import com.example.fc_plaza_service.infrastructure.adapters.persistence.adapter.RestaurantPersistenceAdapter;
@@ -41,6 +44,7 @@ public class UseCasesConfig {
   private final OrderDishEntityMapper orderDishEntityMapper;
   private final OrderRepository orderRepository;
   private final OrderDishRepository orderDishRepository;
+  private final MsgFeignClient msgFeignClient;
 
   @Bean
   public RestaurantPersistencePort restaurantPersistencePort() {
@@ -85,7 +89,14 @@ public class UseCasesConfig {
 
   @Bean
   public OrderServicePort orderServicePort(
-      OrderPersistencePort orderPersistencePort, UserServicePort userServicePort) {
-    return new OrderUseCase(orderPersistencePort, userServicePort);
+      OrderPersistencePort orderPersistencePort,
+      UserServicePort userServicePort,
+      MsgServicePort msgServicePort) {
+    return new OrderUseCase(orderPersistencePort, userServicePort, msgServicePort);
+  }
+
+  @Bean
+  public MsgServicePort msgServicePort() {
+    return new MsgServiceAdapter(msgFeignClient);
   }
 }

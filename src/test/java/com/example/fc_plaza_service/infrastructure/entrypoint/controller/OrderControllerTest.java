@@ -7,6 +7,7 @@ import static com.example.fc_plaza_service.util.data.OrderRequestData.getInvalid
 import static com.example.fc_plaza_service.util.data.OrderRequestData.getValidOrderRequest;
 import static com.example.fc_plaza_service.util.data.OrderResponseData.getValidOrderResponse;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doNothing;
@@ -106,7 +107,7 @@ class OrderControllerTest {
   void updateOrder_Success() throws Exception {
     Long orderId = 123L;
 
-    doNothing().when(orderApplicationService).updateOrder(anyLong(), any(OrderStatus.class));
+    doNothing().when(orderApplicationService).updateOrder(anyLong(), any(OrderStatus.class), any());
 
     mockMvc
         .perform(
@@ -115,6 +116,27 @@ class OrderControllerTest {
         .andExpect(jsonPath("$.data").value(""))
         .andExpect(jsonPath("$.error").doesNotExist());
 
-    verify(orderApplicationService).updateOrder(anyLong(), any(OrderStatus.class));
+    verify(orderApplicationService).updateOrder(anyLong(), any(OrderStatus.class), any());
+  }
+
+  @Test
+  void deliverOrder_Success() throws Exception {
+    Long orderId = 123L;
+    String pin = "1234";
+
+    doNothing()
+        .when(orderApplicationService)
+        .updateOrder(anyLong(), any(OrderStatus.class), anyInt());
+
+    mockMvc
+        .perform(
+            MockMvcRequestBuilders.patch(RESTAURANT_BASE_PATH + ORDER_BASE_PATH + "/" + orderId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(pin))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.data").value(""))
+        .andExpect(jsonPath("$.error").doesNotExist());
+
+    verify(orderApplicationService).updateOrder(anyLong(), any(OrderStatus.class), anyInt());
   }
 }

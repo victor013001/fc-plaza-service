@@ -1,5 +1,6 @@
 package com.example.fc_plaza_service.infrastructure.adapters.msg_service;
 
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -28,5 +29,16 @@ class MsgServiceAdapterTest {
         .thenReturn(new DefaultServerResponse<>(null, null));
     msgServiceAdapter.sendMessage(orderId, userId);
     verify(msgFeignClient).sendMessage(orderId, userId);
+  }
+
+  @Test
+  void validPin() {
+    var orderId = 1L;
+    var pin = 1234;
+
+    when(msgFeignClient.validPin(anyLong(), anyInt()))
+        .thenReturn(new DefaultServerResponse<>(true, null));
+    msgServiceAdapter.isValidPin(orderId, pin);
+    verify(msgFeignClient).validPin(orderId, pin);
   }
 }

@@ -10,5 +10,5 @@ public interface OrderApplicationService {
 
   List<OrderResponse> getOrders(Integer page, Integer size, String sortedBy);
 
-  void updateOrder(Long orderId, OrderStatus status);
+  void updateOrder(Long orderId, OrderStatus status, Integer pin);
 }

@@ -144,12 +144,32 @@ class OrderUseCaseTest {
     when(orderPersistencePort.getOrderUser(orderId)).thenReturn(userId);
     doNothing().when(msgServicePort).sendMessage(anyLong(), anyLong());
 
-    orderUseCase.changeStatus(orderId, orderStatus, chefId);
+    orderUseCase.changeStatus(orderId, orderStatus, chefId, null);
 
     verify(orderPersistencePort).isOrderChef(orderId, chefId);
     verify(orderPersistencePort).getOrderStatus(orderId);
     verify(orderPersistencePort).changeStatus(orderId, orderStatus);
     verify(orderPersistencePort).getOrderUser(orderId);
     verify(msgServicePort).sendMessage(orderId, userId);
+  }
+
+  @Test
+  void changeStatusToDelivered() {
+    Long orderId = 1L;
+    Long chefId = 2L;
+    OrderStatus orderStatus = OrderStatus.DELIVERED;
+    Long userId = 1L;
+    Integer pin = 1234;
+
+    when(orderPersistencePort.isOrderChef(orderId, chefId)).thenReturn(true);
+    when(orderPersistencePort.getOrderStatus(orderId)).thenReturn(OrderStatus.READY);
+    when(msgServicePort.isValidPin(orderId, pin)).thenReturn(true);
+
+    orderUseCase.changeStatus(orderId, orderStatus, chefId, pin);
+
+    verify(orderPersistencePort).isOrderChef(orderId, chefId);
+    verify(orderPersistencePort).getOrderStatus(orderId);
+    verify(orderPersistencePort).changeStatus(orderId, orderStatus);
+    verify(msgServicePort).isValidPin(orderId, pin);
   }
 }

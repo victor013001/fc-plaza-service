@@ -11,5 +11,5 @@ public interface OrderServicePort {
 
   void assignOrderToChef(Long orderId, Long currentUserId, Long restaurantId);
 
-  void changeStatus(Long orderId, OrderStatus status, Long currentUserId);
+  void changeStatus(Long orderId, OrderStatus status, Long currentUserId, Integer pin);
 }

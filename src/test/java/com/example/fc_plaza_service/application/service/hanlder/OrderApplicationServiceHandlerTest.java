@@ -76,10 +76,26 @@ class OrderApplicationServiceHandlerTest {
     when(userServicePort.getCurrentUserId()).thenReturn(chefId);
     when(userServicePort.getCurrentUserRestaurant()).thenReturn(restaurantId);
 
-    orderApplicationServiceHandler.updateOrder(orderId, status);
+    orderApplicationServiceHandler.updateOrder(orderId, status, null);
 
     verify(userServicePort).getCurrentUserId();
     verify(userServicePort).getCurrentUserRestaurant();
     verify(orderServicePort).assignOrderToChef(orderId, chefId, restaurantId);
+  }
+
+  @Test
+  void updateOrderToReady() {
+    Long orderId = 10L;
+    Long chefId = 99L;
+    Long restaurantId = 123L;
+    OrderStatus status = OrderStatus.DELIVERED;
+    Integer pin = 1234;
+
+    when(userServicePort.getCurrentUserId()).thenReturn(chefId);
+
+    orderApplicationServiceHandler.updateOrder(orderId, status, pin);
+
+    verify(userServicePort).getCurrentUserId();
+    verify(orderServicePort).changeStatus(orderId, status, chefId, pin);
   }
 }

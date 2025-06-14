@@ -33,12 +33,12 @@ public class OrderApplicationServiceHandler implements OrderApplicationService {
   }
 
   @Override
-  public void updateOrder(Long orderId, OrderStatus status) {
+  public void updateOrder(Long orderId, OrderStatus status, Integer pin) {
     if (OrderStatus.IN_PREPARATION.equals(status)) {
       orderServicePort.assignOrderToChef(
           orderId, getCurrentUserId(), getCurrentEmployeeRestaurantId());
     } else {
-      orderServicePort.changeStatus(orderId, status, getCurrentUserId());
+      orderServicePort.changeStatus(orderId, status, getCurrentUserId(), pin);
     }
   }
 

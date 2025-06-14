@@ -94,8 +94,9 @@ public class OrderController {
   @PreAuthorize("hasAuthority('employee')")
   public ResponseEntity<DefaultServerResponse<String, StandardError>> updateOrder(
       @PathVariable(name = "order_id") Long orderId,
-      @RequestParam(value = "status", defaultValue = "IN_PREPARATION") OrderStatus status) {
-    orderApplicationService.updateOrder(orderId, status);
+      @RequestParam(value = "status", defaultValue = "IN_PREPARATION") OrderStatus status,
+      @RequestBody(required = false) Integer pin) {
+    orderApplicationService.updateOrder(orderId, status, pin);
     return ResponseEntity.status(OK_INT).body(new DefaultServerResponse<>("", null));
   }
 }

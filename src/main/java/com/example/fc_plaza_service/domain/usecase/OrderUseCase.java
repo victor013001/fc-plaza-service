@@ -8,6 +8,7 @@ import com.example.fc_plaza_service.domain.spi.MsgServicePort;
 import com.example.fc_plaza_service.domain.spi.OrderPersistencePort;
 import com.example.fc_plaza_service.domain.spi.UserServicePort;
 import java.util.List;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -37,21 +38,32 @@ public class OrderUseCase implements OrderServicePort {
   }
 
   @Override
-  public void changeStatus(Long orderId, OrderStatus status, Long currentUserId) {
+  public void changeStatus(Long orderId, OrderStatus status, Long currentUserId, Integer pin) {
     validOrderChef(orderId, currentUserId);
-    validOrderStatus(orderId, status);
+    validOrderStatusAndPin(orderId, status, pin);
     orderPersistencePort.changeStatus(orderId, status);
-    sendOrderPin(orderId);
+    if (OrderStatus.READY.equals(status)) sendOrderPin(orderId);
   }
 
   private void sendOrderPin(Long orderId) {
     msgServicePort.sendMessage(orderId, orderPersistencePort.getOrderUser(orderId));
   }
 
-  private void validOrderStatus(Long orderId, OrderStatus status) {
+  private void validOrderStatusAndPin(Long orderId, OrderStatus status, Integer pin) {
     OrderStatus currentOrderStatus = orderPersistencePort.getOrderStatus(orderId);
     if (OrderStatus.IN_PREPARATION.equals(currentOrderStatus)
         && OrderStatus.DELIVERED.equals(status)) {
+      throw new BadRequest();
+    }
+    if (Objects.nonNull(pin)
+        && OrderStatus.READY.equals(currentOrderStatus)
+        && OrderStatus.DELIVERED.equals(status)) {
+      validPin(orderId, pin);
+    }
+  }
+
+  private void validPin(Long orderId, Integer pin) {
+    if (!msgServicePort.isValidPin(orderId, pin)) {
       throw new BadRequest();
     }
   }

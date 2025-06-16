@@ -16,9 +16,13 @@ public interface UserFeignClient {
   DefaultServerResponse<Boolean, StandardError> doesLandlordBelongToEmail(
       @PathVariable("landlord_id") Long landlordId);
 
-  @GetMapping("/api/v1/user")
+  @GetMapping("/api/v1/user/id")
   DefaultServerResponse<Long, StandardError> getCurrentUserId();
 
   @GetMapping("/api/v1/user/employee/restaurant")
   DefaultServerResponse<Long, StandardError> getEmployeeRestaurant();
+
+  @GetMapping("/api/v1/user/email/{user_id}")
+  DefaultServerResponse<String, StandardError> getUserEmail(
+      @PathVariable(name = "user_id") Long userId);
 }

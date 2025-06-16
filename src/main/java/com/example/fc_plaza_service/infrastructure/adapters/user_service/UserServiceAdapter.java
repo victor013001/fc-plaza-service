@@ -48,4 +48,11 @@ public class UserServiceAdapter implements UserServicePort {
         .map(DefaultServerResponse::data)
         .orElseThrow(BadRequest::new);
   }
+
+  @Override
+  public String getUserEmail(Long userId) {
+    return Optional.of(userFeignClient.getUserEmail(userId))
+        .map(DefaultServerResponse::data)
+        .orElseThrow();
+  }
 }

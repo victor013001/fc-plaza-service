@@ -10,6 +10,7 @@ import static com.example.fc_plaza_service.domain.constants.MsgConst.BAD_REQUEST
 import static com.example.fc_plaza_service.domain.constants.MsgConst.DISH_ALREADY_EXISTS_MSG;
 import static com.example.fc_plaza_service.domain.constants.MsgConst.DISH_CREATED_SUCCESSFULLY_MSG;
 import static com.example.fc_plaza_service.domain.constants.MsgConst.DISH_UPDATED_SUCCESSFULLY_MSG;
+import static com.example.fc_plaza_service.domain.constants.MsgConst.GET_MENU;
 import static com.example.fc_plaza_service.domain.constants.MsgConst.SERVER_ERROR_MSG;
 import static com.example.fc_plaza_service.domain.constants.RouterConst.DISH_BASE_PATH;
 import static com.example.fc_plaza_service.domain.constants.RouterConst.ENABLE_BASE_PATH;
@@ -113,7 +114,7 @@ public class DishController {
   @Operation(summary = GET_MENU_OPERATION)
   @ApiResponses(
       value = {
-        @ApiResponse(responseCode = OK, description = ""),
+        @ApiResponse(responseCode = OK, description = GET_MENU),
         @ApiResponse(responseCode = SERVER_ERROR, description = SERVER_ERROR_MSG),
       })
   @GetMapping("/{restaurant_id}" + MENU_BASE_PATH)

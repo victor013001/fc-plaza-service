@@ -6,6 +6,7 @@ import static com.example.fc_plaza_service.domain.constants.HttpStatusConst.CREA
 import static com.example.fc_plaza_service.domain.constants.HttpStatusConst.OK;
 import static com.example.fc_plaza_service.domain.constants.HttpStatusConst.SERVER_ERROR;
 import static com.example.fc_plaza_service.domain.constants.MsgConst.BAD_REQUEST_MSG;
+import static com.example.fc_plaza_service.domain.constants.MsgConst.GET_RESTAURANTS;
 import static com.example.fc_plaza_service.domain.constants.MsgConst.RESTAURANT_ALREADY_EXISTS_MSG;
 import static com.example.fc_plaza_service.domain.constants.MsgConst.RESTAURANT_CREATED_SUCCESSFULLY_MSG;
 import static com.example.fc_plaza_service.domain.constants.MsgConst.SERVER_ERROR_MSG;
@@ -63,7 +64,7 @@ public class RestaurantController {
   @Operation(summary = GET_RESTAURANTS_OPERATION)
   @ApiResponses(
       value = {
-        @ApiResponse(responseCode = OK, description = ""),
+        @ApiResponse(responseCode = OK, description = GET_RESTAURANTS),
         @ApiResponse(responseCode = SERVER_ERROR, description = SERVER_ERROR_MSG),
       })
   @GetMapping

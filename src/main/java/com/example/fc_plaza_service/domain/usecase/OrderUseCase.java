@@ -4,9 +4,12 @@ import com.example.fc_plaza_service.domain.api.OrderServicePort;
 import com.example.fc_plaza_service.domain.enums.OrderStatus;
 import com.example.fc_plaza_service.domain.exceptions.standard_exception.BadRequest;
 import com.example.fc_plaza_service.domain.model.Order;
+import com.example.fc_plaza_service.domain.model.TraceOrderRequest;
 import com.example.fc_plaza_service.domain.spi.MsgServicePort;
 import com.example.fc_plaza_service.domain.spi.OrderPersistencePort;
+import com.example.fc_plaza_service.domain.spi.TraceServicePort;
 import com.example.fc_plaza_service.domain.spi.UserServicePort;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +20,7 @@ public class OrderUseCase implements OrderServicePort {
   private final OrderPersistencePort orderPersistencePort;
   private final UserServicePort userServicePort;
   private final MsgServicePort msgServicePort;
+  private final TraceServicePort traceServicePort;
 
   @Override
   public void placeOrder(Order order) {
@@ -40,16 +44,20 @@ public class OrderUseCase implements OrderServicePort {
   @Override
   public void changeStatus(Long orderId, OrderStatus status, Long currentUserId, Integer pin) {
     validOrderChef(orderId, currentUserId);
-    validOrderStatusAndPin(orderId, status, pin);
+    OrderStatus currentStatus = getCurrentOrderStatus(orderId);
+    validOrderStatusAndPin(orderId, status, pin, currentStatus);
     orderPersistencePort.changeStatus(orderId, status);
     if (OrderStatus.READY.equals(status)) sendOrderPin(orderId);
+    traceOrder(buildTraceOrder(orderId, currentStatus));
   }
 
   @Override
   public void cancelOrder(Long orderId, Long currentUserId) {
     validOrderClient(orderId, currentUserId);
-    validOrderStatusAndPin(orderId, OrderStatus.CANCELED, null);
+    OrderStatus currentStatus = getCurrentOrderStatus(orderId);
+    validOrderStatusAndPin(orderId, OrderStatus.CANCELED, null, currentStatus);
     orderPersistencePort.changeStatus(orderId, OrderStatus.CANCELED);
+    traceOrder(buildTraceOrder(orderId, currentStatus));
   }
 
   private void validOrderClient(Long orderId, Long currentUserId) {
@@ -62,23 +70,38 @@ public class OrderUseCase implements OrderServicePort {
     msgServicePort.sendMessage(orderId, orderPersistencePort.getOrderUser(orderId));
   }
 
-  private void validOrderStatusAndPin(Long orderId, OrderStatus status, Integer pin) {
-    OrderStatus currentOrderStatus = orderPersistencePort.getOrderStatus(orderId);
-    if (Objects.nonNull(pin)
-        && OrderStatus.READY.equals(currentOrderStatus)
-        && OrderStatus.DELIVERED.equals(status)) {
+  private void validOrderStatusAndPin(
+      Long orderId, OrderStatus status, Integer pin, OrderStatus currentStatus) {
+
+    if (requiresPinValidation(currentStatus, status, pin)) {
       validPin(orderId, pin);
     }
-    if (OrderStatus.CANCELED.equals(status)
-        && (OrderStatus.READY.equals(currentOrderStatus)
-            || OrderStatus.DELIVERED.equals(currentOrderStatus)
-            || OrderStatus.CANCELED.equals(currentOrderStatus))) {
+
+    if (isInvalidCancelTransition(currentStatus, status)
+        || isInvalidDeliveryTransition(currentStatus, status)) {
       throw new BadRequest();
     }
-    if (OrderStatus.IN_PREPARATION.equals(currentOrderStatus)
-        && OrderStatus.DELIVERED.equals(status)) {
-      throw new BadRequest();
-    }
+  }
+
+  private OrderStatus getCurrentOrderStatus(Long orderId) {
+    return orderPersistencePort.getOrderStatus(orderId);
+  }
+
+  private boolean requiresPinValidation(OrderStatus current, OrderStatus target, Integer pin) {
+    return Objects.nonNull(pin)
+        && OrderStatus.READY.equals(current)
+        && OrderStatus.DELIVERED.equals(target);
+  }
+
+  private boolean isInvalidCancelTransition(OrderStatus current, OrderStatus target) {
+    return OrderStatus.CANCELED.equals(target)
+        && (OrderStatus.READY.equals(current)
+            || OrderStatus.DELIVERED.equals(current)
+            || OrderStatus.CANCELED.equals(current));
+  }
+
+  private boolean isInvalidDeliveryTransition(OrderStatus current, OrderStatus target) {
+    return OrderStatus.IN_PREPARATION.equals(current) && OrderStatus.DELIVERED.equals(target);
   }
 
   private void validPin(Long orderId, Integer pin) {
@@ -109,5 +132,28 @@ public class OrderUseCase implements OrderServicePort {
     if (!orderPersistencePort.allOrdersInDelivered(clientId)) {
       throw new BadRequest();
     }
+  }
+
+  private TraceOrderRequest buildTraceOrder(Long orderId, OrderStatus previousStatus) {
+    Order order = orderPersistencePort.getOrder(orderId);
+    Long clientId = order.clientId();
+    Long chefId = order.chefId();
+    return new TraceOrderRequest(
+        orderId,
+        order.clientId(),
+        getUserEmail(clientId),
+        LocalDateTime.now(),
+        previousStatus,
+        order.status(),
+        chefId,
+        getUserEmail(chefId));
+  }
+
+  private String getUserEmail(Long userId) {
+    return userServicePort.getUserEmail(userId);
+  }
+
+  private void traceOrder(TraceOrderRequest traceOrderRequest) {
+    traceServicePort.trace(traceOrderRequest);
   }
 }

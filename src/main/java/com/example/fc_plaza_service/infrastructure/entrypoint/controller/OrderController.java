@@ -7,8 +7,10 @@ import static com.example.fc_plaza_service.domain.constants.HttpStatusConst.OK;
 import static com.example.fc_plaza_service.domain.constants.HttpStatusConst.OK_INT;
 import static com.example.fc_plaza_service.domain.constants.HttpStatusConst.SERVER_ERROR;
 import static com.example.fc_plaza_service.domain.constants.MsgConst.BAD_REQUEST_MSG;
+import static com.example.fc_plaza_service.domain.constants.MsgConst.GET_ORDERS;
 import static com.example.fc_plaza_service.domain.constants.MsgConst.ORDER_CONFLICT_MSG;
 import static com.example.fc_plaza_service.domain.constants.MsgConst.ORDER_CREATED_SUCCESSFULLY_MSG;
+import static com.example.fc_plaza_service.domain.constants.MsgConst.ORDER_UPDATED_SUCCESSFULLY_MSG;
 import static com.example.fc_plaza_service.domain.constants.MsgConst.SERVER_ERROR_MSG;
 import static com.example.fc_plaza_service.domain.constants.RouterConst.ORDER_BASE_PATH;
 import static com.example.fc_plaza_service.domain.constants.RouterConst.RESTAURANT_BASE_PATH;
@@ -17,6 +19,7 @@ import static com.example.fc_plaza_service.domain.constants.SwaggerConst.CREATE_
 import static com.example.fc_plaza_service.domain.constants.SwaggerConst.GET_ORDERS_OPERATION;
 import static com.example.fc_plaza_service.domain.constants.SwaggerConst.UPDATE_ORDER_OPERATION;
 import static com.example.fc_plaza_service.domain.enums.ServerResponses.ORDER_CREATED_SUCCESSFULLY;
+import static com.example.fc_plaza_service.domain.enums.ServerResponses.ORDER_UPDATED_SUCCESSFULLY;
 
 import com.example.fc_plaza_service.application.service.OrderApplicationService;
 import com.example.fc_plaza_service.domain.enums.OrderStatus;
@@ -72,7 +75,7 @@ public class OrderController {
   @Operation(summary = GET_ORDERS_OPERATION)
   @ApiResponses(
       value = {
-        @ApiResponse(responseCode = OK, description = ""),
+        @ApiResponse(responseCode = OK, description = GET_ORDERS),
         @ApiResponse(responseCode = SERVER_ERROR, description = SERVER_ERROR_MSG),
       })
   @GetMapping(ORDER_BASE_PATH)
@@ -90,7 +93,7 @@ public class OrderController {
   @Operation(summary = UPDATE_ORDER_OPERATION)
   @ApiResponses(
       value = {
-        @ApiResponse(responseCode = OK, description = ""),
+        @ApiResponse(responseCode = OK, description = ORDER_UPDATED_SUCCESSFULLY_MSG),
         @ApiResponse(responseCode = SERVER_ERROR, description = SERVER_ERROR_MSG),
       })
   @PatchMapping(ORDER_BASE_PATH + "/{order_id}")
@@ -100,13 +103,14 @@ public class OrderController {
       @RequestParam(value = "status", defaultValue = "IN_PREPARATION") OrderStatus status,
       @RequestBody(required = false) Integer pin) {
     orderApplicationService.updateOrder(orderId, status, pin);
-    return ResponseEntity.status(OK_INT).body(new DefaultServerResponse<>("", null));
+    return ResponseEntity.status(ORDER_UPDATED_SUCCESSFULLY.getHttpStatus())
+        .body(new DefaultServerResponse<>(ORDER_UPDATED_SUCCESSFULLY.getMessage(), null));
   }
 
   @Operation(summary = CANCEL_ORDER_OPERATION)
   @ApiResponses(
       value = {
-        @ApiResponse(responseCode = OK, description = ""),
+        @ApiResponse(responseCode = OK, description = UPDATE_ORDER_OPERATION),
         @ApiResponse(responseCode = SERVER_ERROR, description = SERVER_ERROR_MSG),
       })
   @DeleteMapping(ORDER_BASE_PATH + "/{order_id}")
@@ -114,6 +118,7 @@ public class OrderController {
   public ResponseEntity<DefaultServerResponse<String, StandardError>> cancelOrder(
       @PathVariable(name = "order_id") Long orderId) {
     orderApplicationService.cancelOrder(orderId);
-    return ResponseEntity.status(OK_INT).body(new DefaultServerResponse<>("", null));
+    return ResponseEntity.status(ORDER_UPDATED_SUCCESSFULLY.getHttpStatus())
+        .body(new DefaultServerResponse<>(ORDER_UPDATED_SUCCESSFULLY.getMessage(), null));
   }
 }

@@ -1,8 +1,8 @@
 package com.example.fc_plaza_service.application.mapper;
 
+import com.example.fc_plaza_service.application.dto.request.RestaurantRequest;
+import com.example.fc_plaza_service.application.dto.response.RestaurantResponse;
 import com.example.fc_plaza_service.domain.model.Restaurant;
-import com.example.fc_plaza_service.infrastructure.entrypoint.dto.request.RestaurantRequest;
-import com.example.fc_plaza_service.infrastructure.entrypoint.dto.response.RestaurantResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;
 

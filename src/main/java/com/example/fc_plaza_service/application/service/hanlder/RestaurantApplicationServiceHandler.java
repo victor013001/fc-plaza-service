@@ -1,10 +1,10 @@
 package com.example.fc_plaza_service.application.service.hanlder;
 
+import com.example.fc_plaza_service.application.dto.request.RestaurantRequest;
+import com.example.fc_plaza_service.application.dto.response.RestaurantResponse;
 import com.example.fc_plaza_service.application.mapper.RestaurantMapper;
 import com.example.fc_plaza_service.application.service.RestaurantApplicationService;
 import com.example.fc_plaza_service.domain.api.RestaurantServicePort;
-import com.example.fc_plaza_service.infrastructure.entrypoint.dto.request.RestaurantRequest;
-import com.example.fc_plaza_service.infrastructure.entrypoint.dto.response.RestaurantResponse;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;

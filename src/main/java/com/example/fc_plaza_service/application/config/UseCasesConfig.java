@@ -7,6 +7,7 @@ import com.example.fc_plaza_service.domain.spi.DishPersistencePort;
 import com.example.fc_plaza_service.domain.spi.MsgServicePort;
 import com.example.fc_plaza_service.domain.spi.OrderPersistencePort;
 import com.example.fc_plaza_service.domain.spi.RestaurantPersistencePort;
+import com.example.fc_plaza_service.domain.spi.TraceServicePort;
 import com.example.fc_plaza_service.domain.spi.UserServicePort;
 import com.example.fc_plaza_service.domain.usecase.DishUseCase;
 import com.example.fc_plaza_service.domain.usecase.OrderUseCase;
@@ -25,6 +26,8 @@ import com.example.fc_plaza_service.infrastructure.adapters.persistence.reposito
 import com.example.fc_plaza_service.infrastructure.adapters.persistence.repository.OrderDishRepository;
 import com.example.fc_plaza_service.infrastructure.adapters.persistence.repository.OrderRepository;
 import com.example.fc_plaza_service.infrastructure.adapters.persistence.repository.RestaurantRepository;
+import com.example.fc_plaza_service.infrastructure.adapters.trace_service.TraceServiceAdapter;
+import com.example.fc_plaza_service.infrastructure.adapters.trace_service.feign.TraceFeignClient;
 import com.example.fc_plaza_service.infrastructure.adapters.user_service.UserServiceAdapter;
 import com.example.fc_plaza_service.infrastructure.adapters.user_service.feign.UserFeignClient;
 import lombok.RequiredArgsConstructor;
@@ -45,6 +48,7 @@ public class UseCasesConfig {
   private final OrderRepository orderRepository;
   private final OrderDishRepository orderDishRepository;
   private final MsgFeignClient msgFeignClient;
+  private final TraceFeignClient traceFeignClient;
 
   @Bean
   public RestaurantPersistencePort restaurantPersistencePort() {
@@ -91,12 +95,19 @@ public class UseCasesConfig {
   public OrderServicePort orderServicePort(
       OrderPersistencePort orderPersistencePort,
       UserServicePort userServicePort,
-      MsgServicePort msgServicePort) {
-    return new OrderUseCase(orderPersistencePort, userServicePort, msgServicePort);
+      MsgServicePort msgServicePort,
+      TraceServicePort traceServicePort) {
+    return new OrderUseCase(
+        orderPersistencePort, userServicePort, msgServicePort, traceServicePort);
   }
 
   @Bean
   public MsgServicePort msgServicePort() {
     return new MsgServiceAdapter(msgFeignClient);
+  }
+
+  @Bean
+  public TraceServicePort traceServicePort() {
+    return new TraceServiceAdapter(traceFeignClient);
   }
 }

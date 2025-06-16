@@ -1,8 +1,8 @@
 package com.example.fc_plaza_service.util.data;
 
+import com.example.fc_plaza_service.application.dto.response.OrderDishResponse;
+import com.example.fc_plaza_service.application.dto.response.OrderResponse;
 import com.example.fc_plaza_service.domain.enums.OrderStatus;
-import com.example.fc_plaza_service.infrastructure.entrypoint.dto.response.OrderDishResponse;
-import com.example.fc_plaza_service.infrastructure.entrypoint.dto.response.OrderResponse;
 import java.time.LocalDate;
 import java.util.List;
 

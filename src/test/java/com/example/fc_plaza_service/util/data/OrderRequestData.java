@@ -1,7 +1,7 @@
 package com.example.fc_plaza_service.util.data;
 
-import com.example.fc_plaza_service.infrastructure.entrypoint.dto.request.OrderDishRequest;
-import com.example.fc_plaza_service.infrastructure.entrypoint.dto.request.OrderRequest;
+import com.example.fc_plaza_service.application.dto.request.OrderDishRequest;
+import com.example.fc_plaza_service.application.dto.request.OrderRequest;
 import java.util.Collections;
 import java.util.List;
 

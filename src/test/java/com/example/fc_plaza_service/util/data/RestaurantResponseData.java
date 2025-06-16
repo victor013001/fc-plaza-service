@@ -1,6 +1,6 @@
 package com.example.fc_plaza_service.util.data;
 
-import com.example.fc_plaza_service.infrastructure.entrypoint.dto.response.RestaurantResponse;
+import com.example.fc_plaza_service.application.dto.response.RestaurantResponse;
 
 public class RestaurantResponseData {
   private RestaurantResponseData() {

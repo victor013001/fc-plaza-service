@@ -1,7 +1,7 @@
 package com.example.fc_plaza_service.util.data;
 
-import com.example.fc_plaza_service.infrastructure.entrypoint.dto.request.DishRequest;
-import com.example.fc_plaza_service.infrastructure.entrypoint.dto.request.DishUpdateRequest;
+import com.example.fc_plaza_service.application.dto.request.DishRequest;
+import com.example.fc_plaza_service.application.dto.request.DishUpdateRequest;
 
 public class DishRequestData {
   private DishRequestData() {

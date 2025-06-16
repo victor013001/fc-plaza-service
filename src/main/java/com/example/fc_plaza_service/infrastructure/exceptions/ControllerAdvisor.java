@@ -2,9 +2,9 @@ package com.example.fc_plaza_service.infrastructure.exceptions;
 
 import static com.example.fc_plaza_service.domain.enums.ServerResponses.SERVER_ERROR;
 
+import com.example.fc_plaza_service.application.dto.request.DefaultServerResponse;
 import com.example.fc_plaza_service.domain.exceptions.StandardError;
 import com.example.fc_plaza_service.domain.exceptions.StandardException;
-import com.example.fc_plaza_service.infrastructure.entrypoint.dto.request.DefaultServerResponse;
 import java.time.LocalDateTime;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;

@@ -21,12 +21,12 @@ import static com.example.fc_plaza_service.domain.constants.SwaggerConst.UPDATE_
 import static com.example.fc_plaza_service.domain.enums.ServerResponses.ORDER_CREATED_SUCCESSFULLY;
 import static com.example.fc_plaza_service.domain.enums.ServerResponses.ORDER_UPDATED_SUCCESSFULLY;
 
+import com.example.fc_plaza_service.application.dto.request.DefaultServerResponse;
+import com.example.fc_plaza_service.application.dto.request.OrderRequest;
+import com.example.fc_plaza_service.application.dto.response.OrderResponse;
 import com.example.fc_plaza_service.application.service.OrderApplicationService;
 import com.example.fc_plaza_service.domain.enums.OrderStatus;
 import com.example.fc_plaza_service.domain.exceptions.StandardError;
-import com.example.fc_plaza_service.infrastructure.entrypoint.dto.request.DefaultServerResponse;
-import com.example.fc_plaza_service.infrastructure.entrypoint.dto.request.OrderRequest;
-import com.example.fc_plaza_service.infrastructure.entrypoint.dto.response.OrderResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;

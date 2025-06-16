@@ -1,4 +1,4 @@
-package com.example.fc_plaza_service.infrastructure.entrypoint.dto.request;
+package com.example.fc_plaza_service.application.dto.request;
 
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;

@@ -15,11 +15,11 @@ import static com.example.fc_plaza_service.domain.constants.SwaggerConst.CREATE_
 import static com.example.fc_plaza_service.domain.constants.SwaggerConst.GET_RESTAURANTS_OPERATION;
 import static com.example.fc_plaza_service.domain.enums.ServerResponses.RESTAURANT_CREATED_SUCCESSFULLY;
 
+import com.example.fc_plaza_service.application.dto.request.DefaultServerResponse;
+import com.example.fc_plaza_service.application.dto.request.RestaurantRequest;
+import com.example.fc_plaza_service.application.dto.response.RestaurantResponse;
 import com.example.fc_plaza_service.application.service.RestaurantApplicationService;
 import com.example.fc_plaza_service.domain.exceptions.StandardError;
-import com.example.fc_plaza_service.infrastructure.entrypoint.dto.request.DefaultServerResponse;
-import com.example.fc_plaza_service.infrastructure.entrypoint.dto.request.RestaurantRequest;
-import com.example.fc_plaza_service.infrastructure.entrypoint.dto.response.RestaurantResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;

@@ -1,7 +1,7 @@
 package com.example.fc_plaza_service.infrastructure.adapters.user_service.feign;
 
+import com.example.fc_plaza_service.application.dto.request.DefaultServerResponse;
 import com.example.fc_plaza_service.domain.exceptions.StandardError;
-import com.example.fc_plaza_service.infrastructure.entrypoint.dto.request.DefaultServerResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,9 +16,13 @@ public interface UserFeignClient {
   DefaultServerResponse<Boolean, StandardError> doesLandlordBelongToEmail(
       @PathVariable("landlord_id") Long landlordId);
 
-  @GetMapping("/api/v1/user")
+  @GetMapping("/api/v1/user/id")
   DefaultServerResponse<Long, StandardError> getCurrentUserId();
 
   @GetMapping("/api/v1/user/employee/restaurant")
   DefaultServerResponse<Long, StandardError> getEmployeeRestaurant();
+
+  @GetMapping("/api/v1/user/email/{user_id}")
+  DefaultServerResponse<String, StandardError> getUserEmail(
+      @PathVariable(name = "user_id") Long userId);
 }

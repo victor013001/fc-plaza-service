@@ -1,7 +1,7 @@
 package com.example.fc_plaza_service.infrastructure.adapters.msg_service.feign;
 
+import com.example.fc_plaza_service.application.dto.request.DefaultServerResponse;
 import com.example.fc_plaza_service.domain.exceptions.StandardError;
-import com.example.fc_plaza_service.infrastructure.entrypoint.dto.request.DefaultServerResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

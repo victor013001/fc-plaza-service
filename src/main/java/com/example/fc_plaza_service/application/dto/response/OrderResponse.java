@@ -1,4 +1,4 @@
-package com.example.fc_plaza_service.infrastructure.entrypoint.dto.response;
+package com.example.fc_plaza_service.application.dto.response;
 
 import com.example.fc_plaza_service.domain.enums.OrderStatus;
 import java.time.LocalDate;

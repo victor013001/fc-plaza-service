@@ -36,9 +36,15 @@ public interface OrderRepository extends JpaRepository<OrderEntity, Long> {
 
   boolean existsByIdAndChefId(Long orderId, Long chefId);
 
+  @Query("SELECT o.status FROM OrderEntity o WHERE o.id = :orderId")
   OrderStatus getStatusById(Long orderId);
 
+  @Query("SELECT o.clientId FROM OrderEntity o WHERE o.id = :orderId")
   Long getClientIdById(Long orderId);
 
   boolean existsByIdAndClientId(Long orderId, Long currentUserId);
+
+  @Modifying
+  @Query("UPDATE OrderEntity o SET o.status = :status WHERE o.id = :orderId")
+  void updateStatusById(@Param("orderId") Long orderId, @Param("status") OrderStatus status);
 }

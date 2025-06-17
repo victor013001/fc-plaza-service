@@ -19,4 +19,8 @@ public class MsgConst {
   public static final String ORDER_CREATED_SUCCESSFULLY_MSG = "The order was created successfully.";
   public static final String ORDER_CONFLICT_MSG =
       "The order could not be processed due to another order not yet delivered.";
+  public static final String GET_MENU = "The restaurant menu.";
+  public static final String GET_ORDERS = "The restaurant orders.";
+  public static final String GET_RESTAURANTS = "The restaurant.";
+  public static final String ORDER_UPDATED_SUCCESSFULLY_MSG = "The order was updated successfully.";
 }

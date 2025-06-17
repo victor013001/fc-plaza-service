@@ -8,4 +8,6 @@ public interface UserServicePort {
   Long getCurrentUserId();
 
   Long getCurrentUserRestaurant();
+
+  String getUserEmail(Long userId);
 }

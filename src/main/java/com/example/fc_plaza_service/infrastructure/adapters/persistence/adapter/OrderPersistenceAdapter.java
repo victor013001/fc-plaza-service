@@ -76,6 +76,7 @@ public class OrderPersistenceAdapter implements OrderPersistencePort {
   }
 
   @Override
+  @Transactional
   public void setChefId(Long orderId, Long currentUserId) {
     orderRepository.assignChefAndSetInPreparation(orderId, currentUserId);
   }
@@ -91,7 +92,10 @@ public class OrderPersistenceAdapter implements OrderPersistencePort {
   }
 
   @Override
-  public void changeStatus(Long orderId, OrderStatus status) {}
+  @Transactional
+  public void changeStatus(Long orderId, OrderStatus status) {
+    orderRepository.updateStatusById(orderId, status);
+  }
 
   @Override
   public OrderStatus getOrderStatus(Long orderId) {
@@ -106,6 +110,11 @@ public class OrderPersistenceAdapter implements OrderPersistencePort {
   @Override
   public boolean isOrderClient(Long orderId, Long currentUserId) {
     return orderRepository.existsByIdAndClientId(orderId, currentUserId);
+  }
+
+  @Override
+  public Order getOrder(Long orderId) {
+    return orderRepository.findById(orderId).map(orderEntityMapper::toModelNoDished).orElseThrow();
   }
 
   private PageRequest buildPageRequest(Integer page, Integer size) {

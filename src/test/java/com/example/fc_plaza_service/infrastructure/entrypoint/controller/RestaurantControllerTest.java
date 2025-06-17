@@ -11,8 +11,8 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.example.fc_plaza_service.application.dto.request.RestaurantRequest;
 import com.example.fc_plaza_service.application.service.RestaurantApplicationService;
-import com.example.fc_plaza_service.infrastructure.entrypoint.dto.request.RestaurantRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import java.util.List;

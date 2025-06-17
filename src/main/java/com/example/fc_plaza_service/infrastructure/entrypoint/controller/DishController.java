@@ -10,6 +10,7 @@ import static com.example.fc_plaza_service.domain.constants.MsgConst.BAD_REQUEST
 import static com.example.fc_plaza_service.domain.constants.MsgConst.DISH_ALREADY_EXISTS_MSG;
 import static com.example.fc_plaza_service.domain.constants.MsgConst.DISH_CREATED_SUCCESSFULLY_MSG;
 import static com.example.fc_plaza_service.domain.constants.MsgConst.DISH_UPDATED_SUCCESSFULLY_MSG;
+import static com.example.fc_plaza_service.domain.constants.MsgConst.GET_MENU;
 import static com.example.fc_plaza_service.domain.constants.MsgConst.SERVER_ERROR_MSG;
 import static com.example.fc_plaza_service.domain.constants.RouterConst.DISH_BASE_PATH;
 import static com.example.fc_plaza_service.domain.constants.RouterConst.ENABLE_BASE_PATH;
@@ -22,13 +23,13 @@ import static com.example.fc_plaza_service.domain.constants.SwaggerConst.UPDATE_
 import static com.example.fc_plaza_service.domain.enums.ServerResponses.DISH_CREATED_SUCCESSFULLY;
 import static com.example.fc_plaza_service.domain.enums.ServerResponses.DISH_UPDATED_SUCCESSFULLY;
 
+import com.example.fc_plaza_service.application.dto.request.DefaultServerResponse;
+import com.example.fc_plaza_service.application.dto.request.DishRequest;
+import com.example.fc_plaza_service.application.dto.request.DishUpdateRequest;
+import com.example.fc_plaza_service.application.dto.response.DishResponse;
 import com.example.fc_plaza_service.application.service.DishApplicationService;
 import com.example.fc_plaza_service.domain.enums.ProductStatus;
 import com.example.fc_plaza_service.domain.exceptions.StandardError;
-import com.example.fc_plaza_service.infrastructure.entrypoint.dto.request.DefaultServerResponse;
-import com.example.fc_plaza_service.infrastructure.entrypoint.dto.request.DishRequest;
-import com.example.fc_plaza_service.infrastructure.entrypoint.dto.request.DishUpdateRequest;
-import com.example.fc_plaza_service.infrastructure.entrypoint.dto.response.DishResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -113,7 +114,7 @@ public class DishController {
   @Operation(summary = GET_MENU_OPERATION)
   @ApiResponses(
       value = {
-        @ApiResponse(responseCode = OK, description = ""),
+        @ApiResponse(responseCode = OK, description = GET_MENU),
         @ApiResponse(responseCode = SERVER_ERROR, description = SERVER_ERROR_MSG),
       })
   @GetMapping("/{restaurant_id}" + MENU_BASE_PATH)
